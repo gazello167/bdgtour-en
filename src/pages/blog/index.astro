@@ -1,35 +1,27 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import { queryD1 } from '../../lib/d1';
+import Layout from "@layouts/Layout.astro";
+import { queryD1 } from "../../lib/d1";
 
-export async function getStaticPaths() {
-  const posts = await queryD1("SELECT * FROM posts");
-  return posts.map((post: any) => ({
-    params: { slug: post.slug },
-    props: { post },
-  }));
-}
-
-const { post } = Astro.props;
+const posts = await queryD1("SELECT * FROM posts ORDER BY created_at DESC");
 ---
 
 <Layout title="Bandung Tour Articles & News">
   <main class="container mx-auto py-12 px-4">
     <h1 class="text-3xl font-bold mb-8">Latest Travel Articles</h1>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       {posts.map((post: any) => (
         <article class="card border rounded-lg p-4 shadow-sm">
           {post.image_url && (
-            <img 
-              src={post.image_url} 
-              alt={post.title} 
+            <img
+              src={post.image_url}
+              alt={post.title}
               class="w-full h-48 object-cover rounded mb-4"
             />
           )}
           <h2 class="text-xl font-bold">{post.title}</h2>
           <p class="text-gray-600 my-2">{post.excerpt}</p>
-          <a href={`${import.meta.env.BASE_URL}blog/${post.slug}`} class="text-blue-600 font-semibold hover:underline">
+          <a href={`${import.meta.env.BASE_URL}blog/${post.slug}/`} class="text-blue-600 font-semibold hover:underline">
             Read More &rarr;
           </a>
         </article>
