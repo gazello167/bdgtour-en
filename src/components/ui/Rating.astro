@@ -1,0 +1,28 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  stars: number;
+}
+
+const { stars } = Astro.props;
+---
+
+<span class="rating">
+  {
+    Array.from({ length: stars }, (_, i) => (
+      <Icon name="line-md:star-filled" class="icon-rating" />
+    ))
+  }
+</span>
+
+<style is:global>
+@layer components {
+  .rating {
+  	display: flex;
+  	gap: 0.8rem;
+  	color: #ffc107;
+  	font-size: 2.2rem;
+  }
+}
+</style>

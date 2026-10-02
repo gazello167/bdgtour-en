@@ -1,0 +1,13 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  type: "prev" | "next";
+}
+
+const { type } = Astro.props;
+---
+
+<button class=`splide__arrow splide__arrow--${type}`>
+  <Icon name="material-symbols:chevron-right" />
+</button>

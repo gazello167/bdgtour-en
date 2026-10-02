@@ -1,0 +1,44 @@
+---
+import Heading from "@components/ui/Heading.astro";
+import SearchForm from "@components/blocks/SearchForm.astro";
+import { Image } from "astro:assets";
+
+import data from "@data/hero.json";
+---
+
+<section class="section section--hero">
+  <div class="container container--hero">
+    <Heading level="h1" className="text-white">{data.title}</Heading>
+    <p>{data.subtitle}</p>
+
+    <SearchForm />
+  </div>
+
+  <div class="hero-slider">
+    <div class="splide splide--full">
+      <div class="splide__track">
+        <div class="splide__list">
+          {
+            data.slider.map((item) => (
+              <div class="splide__slide">
+                <Image
+                  src={item.image}
+                  alt={item.alt}
+                  width={1920}
+                  height={1200}
+                  loading="lazy"
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="splide-nav">
+        <div class="splide__pagination"></div>
+        <div class="splide__arrows"></div>
+      </div>
+    </div>
+  </div>
+
+</section>

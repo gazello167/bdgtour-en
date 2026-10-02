@@ -1,0 +1,18 @@
+{
+  "title": "Destination gallery",
+  "subtitle": "Our photo gallery on trip",
+  "slider": [
+    {
+      "image": "/en/images/destinations/01.webp"
+    },
+    {
+      "image": "/en/images/destinations/02.webp"
+    },
+    {
+      "image": "/en/images/destinations/03.webp"
+    },
+    {
+      "image": "/en/images/destinations/04.webp"
+    }
+  ]
+}

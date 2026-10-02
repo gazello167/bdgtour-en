@@ -1,0 +1,50 @@
+---
+import Logo from "@components/ui/Logo.astro";
+import { Icon } from "astro-icon/components";
+
+import data from "@data/footer.json";
+---
+
+<footer class="footer">
+  <div class="footer__inner container">
+
+    <div class="footer__col">
+      <Logo type="full" />
+      <p class="footer__text">{data.copyright}</p>
+    </div>
+
+    {
+      data.menus.map(col => (
+        <div class="footer__col">
+          <ul class="footer__list">
+            <li class="footer__list-item footer__title">{col.title}</li>
+              {
+                col.list.map(item => (
+                  <li class="footer__list-item">
+                    <a class="footer__link" href={item.url}>{item.text}</a>
+                  </li>
+                ))
+              }
+          </ul>
+        </div>
+      ))
+    }
+
+    <div class="footer__col">
+      <span class="footer__title">{data.social.title}</span>
+
+      <ul class="footer__list footer__list--row">
+        {
+          data.social.list.map(item => (
+            <li class="footer__list-item">
+              <a href={item.url} class="footer__link footer__link--social">
+                <Icon name={item.icon} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+  </div>
+</footer>

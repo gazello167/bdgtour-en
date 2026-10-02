@@ -1,0 +1,26 @@
+{
+  "title": "Popular destinations",
+  "subtitle": "Most popular destinations around the world, from historical places to natural wonders.",
+  "slider": [
+    {
+      "title": "Monument of Berlin",
+      "location": "Berlin, Germany",
+      "image": "/en/images/travel/01.webp"
+    },
+    {
+      "title": "Millennium Bridge",
+      "location": "London, United Kingdom",
+      "image": "/en/images/travel/02.webp"
+    },
+    {
+      "title": "Rialto Bridge",
+      "location": "Venice, Italy",
+      "image": "/en/images/travel/03.webp"
+    },
+    {
+      "title": "Sea of Orange Tiles",
+      "location": "Lisbon, Portugal",
+      "image": "/en/images/travel/04.webp"
+    }
+  ]
+}

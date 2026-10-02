@@ -1,0 +1,41 @@
+---
+import Section from "@components/sections/Section.astro";
+import SliderArrows from "@components/blocks/SliderArrows.astro";
+import Heading from "@components/ui/Heading.astro";
+import Testimonial from "@components/blocks/Testimonial.astro";
+
+import data from "@data/testimonials.json";
+---
+
+<Section>
+  <div class="testimonials-slider">
+    <div class="splide splide--grid">
+
+      <div class="splide__text">
+        <Heading level="h2" decor>{data.title}</Heading>
+        <p>{data.subtitle}</p>
+      </div>
+
+      <SliderArrows />
+
+      <div class="splide__track">
+        <div class="splide__list">
+          {
+            data.slider.map(item => (
+              <div class="splide__slide">
+                <Testimonial
+                  name={item.name}
+                  position={item.position}
+                  image={item.image}
+                  text={item.text}
+                  rating={item.rating}
+                 />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+    </div>
+  </div>
+</Section>

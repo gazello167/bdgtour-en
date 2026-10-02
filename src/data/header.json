@@ -1,0 +1,36 @@
+{
+  "menu": [
+    {
+      "url": "/en/",
+      "text": "Home"
+    },
+    {
+      "url": "/en/#explore",
+      "text": "Explore"
+    },
+    {
+      "url": "/en/#travel",
+      "text": "Travel"
+    },
+    {
+      "url": "/en/blog/",
+      "text": "Blog"
+    },
+    {
+      "url": "/en/#pricing",
+      "text": "Pricing"
+    }
+  ],
+  "account": [
+    {
+      "url": "#",
+      "text": "Login",
+      "isButton": false
+    },
+    {
+      "url": "#",
+      "text": "Sign up",
+      "isButton": true
+    }
+  ]
+}

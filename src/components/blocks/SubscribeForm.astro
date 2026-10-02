@@ -1,0 +1,21 @@
+---
+import Heading from "@components/ui/Heading.astro"
+---
+<form class="subscribe-form" action="/">
+  <Heading level="h2">Our Newsletter</Heading>
+
+  <div class="subscribe-form__inner">
+    <label for="subscribe-email">
+      <span>Email</span>
+      <input
+        type="email"
+        id="subscribe-email"
+        name="subscribe-email"
+        placeholder="Enter your email"
+        required
+      />
+    </label>
+
+    <button class="button button-tertiary" type="submit">Subscribe</button>
+  </div>
+</form>

@@ -1,0 +1,29 @@
+---
+import LogoSVG from "@assets/logo.svg";
+import LogoTextSVG from "@assets/logo-text.svg";
+
+interface Props {
+  type: "full" | "short";
+}
+
+const { type } = Astro.props;
+---
+
+<a href="/" class="logo">
+  <LogoSVG />
+  {
+    type === "full" && <LogoTextSVG />
+  }
+</a>
+
+<style is:global>
+@layer components {
+  .logo {
+  	display: inline-flex;
+  	max-width: 24.5rem;
+  	align-items: center;
+  	gap: 0.5rem;
+  	color: currentColor;
+  }
+}
+</style>

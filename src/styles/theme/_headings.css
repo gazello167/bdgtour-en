@@ -1,0 +1,49 @@
+@layer components {
+  .heading {
+   	position: relative;
+   	margin: 0 0 2.4rem 0;
+   	color: var(--title-color);
+   	font-family: var(--heading-font);
+   	font-weight: 400;
+  }
+
+  .heading--decor {
+   	margin: 0 0 3.2rem 0;
+   	padding: 0 0 2rem 0;
+
+   	&:after {
+  		position: absolute;
+  		left: 0;
+  		bottom: 0;
+  		width: clamp(15rem, 10vw, 35rem);
+  		height: 0.3rem;
+  		content: "";
+  		background-color: var(--tertiary-color);
+   	}
+
+   	&.text-center {
+  		&:after {
+   			left: 50%;
+   			transform: translateX(-50%);
+  		}
+   	}
+
+   	&.text-right {
+  		&:after {
+   			left: unset;
+   			right: 0;
+  		}
+   	}
+
+   	@media screen and (max-width: 1023px) {
+   	    &.text-right {
+   			text-align: left;
+
+   			&:after {
+   			    left: 0;
+  				right: unset;
+   			}
+  		}
+   	}
+  }
+}

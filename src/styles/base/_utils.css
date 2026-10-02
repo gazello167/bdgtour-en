@@ -1,0 +1,21 @@
+@layer utils {
+  .flex {
+  	display: flex;
+  }
+
+  .flex-column {
+  	flex-direction: column;
+  }
+
+  .text-center {
+  	text-align: center;
+  }
+
+  .text-right {
+  	text-align: right;
+  }
+
+  .text-white {
+      color: var(--white-color) !important;
+  }
+}

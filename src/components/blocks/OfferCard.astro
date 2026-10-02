@@ -1,0 +1,50 @@
+---
+import Link from "@components/ui/Link.astro";
+import Rating from "@components/ui/Rating.astro";
+import Heading from "@components/ui/Heading.astro";
+import { Image } from "astro:assets";
+
+interface Props {
+	title: string;
+	text: string;
+	image: string;
+	rating: number;
+	price: number;
+}
+
+const { title, image, text, rating, price } = Astro.props;
+---
+
+<article class="card card--offer">
+	<Image
+		src={image}
+		class="card__image"
+		alt=`Special offer image - ${title}`
+		width={500}
+		height={300}
+		loading="lazy"
+	/>
+
+	<div class="card__content">
+		<div class="card__heading-holder">
+			<Heading level="h4">{title}</Heading>
+			<Rating stars={rating} />
+		</div>
+
+		<div class="card__description">{text}</div>
+
+		<div class="card__links">
+			<span class="card__price">
+				From <strong>€{price}</strong>
+			</span>
+			<Link
+				href="#"
+				text="Details"
+				color="tertiary"
+				isButton={true}
+				target="_blank"
+				rel="noopener noreferrer"
+			/>
+		</div>
+	</div>
+</article>

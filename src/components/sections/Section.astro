@@ -1,0 +1,20 @@
+---
+interface Props {
+  type?: "hero" | "test";
+  className?: string;
+}
+
+const { type, className } = Astro.props;
+
+const classNames = [
+  "section",
+  type ? `section--${type}` : "",
+  className
+];
+---
+
+<section class:list={classNames}>
+  <div class="container">
+    <slot />
+  </div>
+</section>

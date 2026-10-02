@@ -1,0 +1,22 @@
+{
+  "title": "Start your unforgettable journey with us.",
+  "subtitle": "The best travel for your jouney begins now",
+  "slider": [
+    {
+      "image": "/en/images/Hero 1.webp",
+      "alt": "Image 1 alt"
+    },
+    {
+      "image": "/en/images/Hero 2.webp",
+      "alt": "Image 2 alt"
+    },
+    {
+      "image": "/en/images/Hero 3.webp",
+      "alt": "Image 3 alt"
+    },
+    {
+      "image": "/en/images/Hero 4.webp",
+      "alt": "Image 4 alt"
+    }
+  ]
+}

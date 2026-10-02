@@ -1,0 +1,41 @@
+---
+import Section from "@components/sections/Section.astro";
+import OfferCard from "@components/blocks/OfferCard.astro";
+import SliderArrows from "@components/blocks/SliderArrows.astro";
+import Heading from "@components/ui/Heading.astro";
+
+import data from "@data/special-offer.json";
+---
+
+<Section>
+  <div class="offer-slider">
+    <div class="splide splide--grid inverted">
+
+      <div class="splide__text">
+        <Heading level="h2" decor textAlign="right">{data.title}</Heading>
+        <p>{data.subtitle}</p>
+      </div>
+
+      <SliderArrows />
+
+      <div class="splide__track">
+        <div class="splide__list">
+          {
+            data.slider.map(item => (
+              <div class="splide__slide">
+                <OfferCard
+                  title={item.title}
+                  text={item.text}
+                  image={item.image}
+                  rating={item.rating}
+                  price={item.price}
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+    </div>
+  </div>
+</Section>

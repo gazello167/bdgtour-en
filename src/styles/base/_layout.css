@@ -1,0 +1,60 @@
+@layer layout {
+  .section {
+    padding: 140px var(--global-gap);
+
+    @media screen and (max-width: 1152px) {
+      padding: 100px var(--global-gap);
+    }
+
+    @media screen and (max-width: 1024px) {
+      padding: 60px var(--global-gap);
+    }
+
+   	&.section--hero {
+      position: relative;
+      display: flex;
+      width: 100%;
+      height: 100dvh;
+      flex-direction: column;
+      justify-content: center;
+
+      @media screen and (max-width: 1024px) {
+        min-height: 100dvh;
+      }
+
+      @media screen and (max-width: 767px) {
+        height: auto;
+        min-height: unset;
+      }
+   	}
+
+    &.section--subscribe {
+      padding: 0 var(--global-gap);
+    }
+  }
+
+  .container {
+    width: 100%;
+    max-width: var(--content-width);
+    margin: 0 auto;
+  }
+
+  .container--hero {
+    z-index: 5;
+    position: relative;
+    padding-right: 20vw;
+    color: var(--white-color);
+
+    p {
+      font-size: 2rem;
+    }
+
+    @media screen and (max-width: 1024px) {
+      padding-right: 0;
+    }
+
+    @media screen and (max-width: 768px) {
+      padding-top: 10rem;
+    }
+  }
+}

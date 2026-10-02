@@ -1,0 +1,72 @@
+---
+import Logo from "@components/ui/Logo.astro";
+import Link from "@components/ui/Link.astro";
+import Burger from "@components/ui/Burger.astro"
+
+import data from "@data/header.json";
+---
+<header class="header" id="header">
+  <div class="header__inner">
+    <span class="header__logo">
+      <Logo type="full" />
+    </span>
+
+    <div class="main-menu">
+      <nav class="header__nav">
+        <ul class="header__nav-list">
+          {
+            data.menu.map(item => (
+              <li class="header__nav-item">
+                <Link
+                  className={"header__nav-link"}
+                  href={item.url}
+                  text={item.text}
+                />
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav class="account">
+        {
+          data.account.map(item => {
+            const buttonProps = item.isButton
+            ? {
+                className: "",
+                color: "tertiary",
+                isButton: true
+              }
+            : {
+                className: "header__nav-link"
+            };
+            return (
+              <Link
+                href={item.url}
+                text={item.text}
+                {...buttonProps}
+              />
+            );
+          })
+        }
+      </nav>
+    </div>
+
+    <Burger />
+
+  </div>
+</header>
+
+<script>
+const header = document.getElementById("header");
+
+if (header) {
+  const onScroll = () => {
+    header.classList.toggle("header--scrolled", window.scrollY > 0);
+  };
+
+  onScroll();
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+}
+</script>

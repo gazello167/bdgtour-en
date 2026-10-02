@@ -1,0 +1,34 @@
+---
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+import Heading from "@components/ui/Heading.astro";
+
+interface Props {
+  title: string;
+  location: string;
+  image: string;
+}
+
+const { title, location, image } = Astro.props;
+---
+
+<article class="card card--travel">
+  <a href="#" class="card__link">
+    <Image
+      src={image}
+      width={500}
+      height={700}
+      class="card__image"
+      alt="Travel Destination"
+      loading="lazy"
+    />
+
+    <div class="card__content">
+      <Heading level="h4">{title}</Heading>
+      <p class="card__description">
+        <Icon name="line-md:map-marker-filled" class="icon-class" />
+        {location}
+      </p>
+    </div>
+  </a>
+</article>

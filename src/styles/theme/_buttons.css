@@ -1,0 +1,78 @@
+@layer components {
+  /* links */
+  .link {
+    text-decoration: none;
+    transition: all 0.3s ease;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &.link-primary {
+      color: var(--primary-color);
+    }
+
+    &.link-secondary {
+      color: var(--secondary-color);
+    }
+
+    &.link-tertiary {
+      color: var(--tertiary-color);
+    }
+  }
+
+  /* buttons */
+  .button {
+    display: inline-flex;
+    padding: 2rem 4rem;
+    color: var(--white-color);
+    font-size: 2rem;
+    border-radius: 1.2rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+
+    &:hover,
+    &:focus,
+    &:active {
+     	text-decoration: none;
+     	/*opacity: 0.8;*/
+    }
+
+    &.button-primary {
+      background-color: var(--primary-color);
+
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: var(--tertiary-color);
+      }
+    }
+
+    &.button-secondary {
+      background-color: var(--secondary-color);
+
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: var(--primary-color);
+      }
+    }
+
+    &.button-tertiary {
+      background-color: var(--tertiary-color);
+
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: var(--primary-color);
+      }
+    }
+  }
+
+  .button-arrow {
+    padding: 1.3rem 1rem;
+    cursor: pointer;
+    font-size: 4rem;
+    border: none;
+  }
+}

@@ -1,0 +1,90 @@
+@layer components {
+  .subscribe-form {
+    position: relative;
+    display: flex;
+    padding: 6rem 8rem;
+    width: 100%;
+    max-width: 126rem;
+    margin: 0 auto -10rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: 2.6rem;
+    background-color: var(--white-color);
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.3);
+
+    @media screen and (max-width: 1150px) {
+      margin-bottom: 6rem;
+      padding: 4rem;
+      flex-direction: column;
+      gap: 6rem;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    @media screen and (max-width: 768px) {
+      padding: 4rem 2rem;
+    }
+
+    .heading {
+      margin: 0;
+      color: var(--secondary-color);
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+      color: var(--secondary-color);
+      font-size: 2rem;
+
+      @media screen and (max-width: 1150px) {
+        flex-grow: 1;
+      }
+
+      @media screen and (max-width: 767px) {
+        width: 100%;
+      }
+    }
+
+    input {
+      height: 7rem;
+      padding: 0 3rem;
+      color: var(--tertiary-color);
+      border: none;
+      border-radius: 1.2rem;
+      background-color: #FFE8D4;
+
+      &::-webkit-input-placeholder {
+        color: var(--tertiary-color);
+      }
+    }
+
+    button[type="submit"] {
+      height: 7rem;
+      padding: 1.6rem 4rem;
+      align-items: center;
+      justify-content: center;
+
+      @media screen and (max-width: 767px) {
+        width: 100%;
+      }
+    }
+  }
+
+  .subscribe-form__inner {
+    display: flex;
+    gap: 5rem;
+    align-items: flex-end;
+
+    @media screen and (max-width: 1150px) {
+      width: 100%;
+      gap: 3.2rem;
+    }
+
+    @media screen and (max-width: 767px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}

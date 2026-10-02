@@ -1,0 +1,33 @@
+@layer base {
+  html {
+    font-size: 62.5%;
+  }
+
+  body {
+    color: var(--text-color);
+    font-size: 1.6rem;
+    font-family: var(--text-font);
+    background-color: var(--white-color);
+    overflow-x: hidden;
+
+    &.menu-open {
+      overflow-y: hidden;
+    }
+  }
+
+  h1 {
+    font-size: clamp(4rem, 2.3657rem + 6.7048vw, 8.4rem);
+  }
+
+  h2 {
+    font-size: clamp(4rem, 3.1086rem + 3.6571vw, 6.4rem);
+  }
+
+  h3 {
+    font-size: clamp(4rem, 3.48rem + 2.1333vw, 5.4rem);
+  }
+
+  h4 {
+    font-size: 2.8rem;
+  }
+}

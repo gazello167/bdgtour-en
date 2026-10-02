@@ -1,0 +1,54 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<form class="search-form" action="/">
+  <div class="search-form__inner">
+
+    <label class="search-form__label" for="destination">
+      <span>Destination</span>
+      <input
+        class="search-form__input"
+        type="text"
+        id="destination"
+        name="search-destination"
+      />
+    </label>
+
+    <label class="search-form__label" for="person">
+      <span>Person</span>
+      <input
+        class="search-form__input"
+        type="number"
+        id="person"
+        name="search-person"
+        min="1" max="20" step="1"
+      />
+    </label>
+
+    <label class="search-form__label" for="check-in">
+      Check In
+      <input
+        class="search-form__input"
+        type="date"
+        id="check-in"
+        name="search-check-in"
+      />
+    </label>
+
+    <label class="search-form__label" for="check-out">
+      Check In
+      <input
+        class="search-form__input"
+        type="date"
+        id="check-out"
+        name="search-check-out"
+      />
+    </label>
+  </div>
+
+  <button class="button-submit button button-tertiary" type="submit">
+    Book now
+    <Icon name="material-symbols:arrow-right-alt-rounded" />
+  </button>
+</form>

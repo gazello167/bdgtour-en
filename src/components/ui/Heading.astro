@@ -1,0 +1,22 @@
+---
+interface Props {
+  level: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  decor?: boolean;
+  textAlign?: "left" | "center" | "right";
+  className?: string;
+}
+
+const { level, decor, textAlign, className } = Astro.props;
+
+const Tag = level;
+const classNames = [
+  "heading",
+  decor ? "heading--decor" : null,
+  textAlign ? "text-" + textAlign : null,
+  className ? className : null
+];
+---
+
+<Tag class:list={classNames}>
+  <slot />
+</Tag>

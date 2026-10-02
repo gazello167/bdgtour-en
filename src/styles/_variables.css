@@ -1,0 +1,22 @@
+:where(:root) {
+  --white-color: #ffffff;
+  --black-color: #000000;
+
+  --primary-color: #172432;
+  --secondary-color: #767e86;
+  --tertiary-color: #ff7757;
+
+  --title-color: var(--primary-color);
+  --text-color: var(--secondary-color);
+
+  --text-font: "Rubik", sans-serif;
+  --heading-font: "Playfair", serif;
+
+  --content-width: 1556px;
+
+  --global-gap: 3.2rem;
+
+  @media screen and (max-width: 768px) {
+    --global-gap: 1.6rem;
+  }
+}

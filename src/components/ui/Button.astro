@@ -1,0 +1,26 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  type: "prev" | "next";
+  color: "primary" | "secondary" | "tertiary";
+  className?: string;
+}
+
+const { type, color, className } = Astro.props;
+const icon = type === "next" ? "material-symbols:chevron-left" : "material-symbols:chevron-right";
+const classes = [
+  "button button-arrow",
+  type ? `button-${type}` : "",
+  color ? `button-${color}` : "",
+  className
+].join(" ");
+---
+
+<button
+  class={classes}
+  title=`${type === 'prev' ? 'Previous slide' : 'Next slide'}`
+  type="button"
+>
+  <Icon name={icon} />
+</button>

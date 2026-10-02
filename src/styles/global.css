@@ -1,0 +1,12 @@
+@import "_variables.css";
+@import "_reset.css";
+@import "_base.css";
+@import "_theme.css";
+
+
+/* media queries */
+@media (max-width: 1152px) {
+  .button {
+    padding: 1.6rem 2.4rem;
+  }
+}

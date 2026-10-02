@@ -1,0 +1,90 @@
+{
+  "copyright": "Copyright © Travellian 2026 All rights reserved",
+  "menus": [
+  {
+    "title": "Menu",
+    "list": [
+      {
+        "url": "#",
+        "text": "Home"
+      },
+      {
+        "url": "#",
+        "text": "Explore"
+      },
+      {
+        "url": "#",
+        "text": "Travel"
+      },
+      {
+        "url": "#",
+        "text": "Blog"
+      },
+      {
+        "url": "#",
+        "text": "Pricing"
+      }
+    ]
+  },
+    {
+      "title": "Information",
+      "list": [
+        {
+          "url": "#",
+          "text": "Destinations"
+        },
+        {
+          "url": "#",
+          "text": "Supports"
+        },
+        {
+          "url": "#",
+          "text": "Terms & Conditions"
+        },
+        {
+          "url": "#",
+          "text": "Privacy"
+        }
+      ]
+    },
+    {
+      "title": "Contact Info",
+      "list": [
+        {
+          "url": "tel:+123456789",
+          "text": "+123 456 789"
+        },
+        {
+          "url": "mailto:info@travellian.com",
+          "text": "info@travellian.com"
+        },
+        {
+          "url": "#",
+          "text": "1245, New Yourk, USA"
+        }
+      ]
+    }
+  ],
+
+  "social": {
+    "title": "Follow us on",
+    "list": [
+      {
+        "icon": "facebook",
+        "url": "https://facebook.com"
+      },
+      {
+        "icon": "pinterest",
+        "url": "https://pinterest.com"
+      },
+      {
+        "icon": "instagram",
+        "url": "https://instagram.com"
+      },
+      {
+        "icon": "twitter",
+        "url": "https://twitter.com"
+      }
+    ]
+  }
+}

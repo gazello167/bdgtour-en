@@ -1,0 +1,24 @@
+---
+interface Props {
+  href: string;
+  text: string;
+  color?: "primary" | "secondary" | "tertiary";
+  isButton?: boolean;
+  target?: string;
+  rel?: string;
+  className?: string;
+}
+
+const props = Astro.props as Props;
+
+let classNames = null;
+if (!props.isButton) {
+  classNames = ["link", props.color ? "link-" + props.color : "", props.className].join(" ");
+} else {
+  classNames = ["button", props.color ? "button-" + props.color : "", props.className].join(" ");
+}
+---
+
+<a href={props.href} class={classNames} target={props.target} rel={props.rel}>
+  {props.text}
+</a>

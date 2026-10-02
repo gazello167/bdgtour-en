@@ -1,0 +1,34 @@
+{
+  "title": "Special offer",
+  "subtitle": "Check out our special offer and discounts",
+  "slider": [
+    {
+      "title": "Lisbon, Portugal",
+      "text": "Passage and going through the cites of the world in classical literature.",
+      "image": "/en/images/offers/01.webp",
+      "rating": 5,
+      "price": 500
+    },
+    {
+      "title": "Athens, Greece",
+      "text": "5 nights and 4 days in 5 star hotel, breakfast and lunch included. Very popular during the renaissance. Passage and going through the cites of the world in classical literature.",
+      "image": "/en/images/offers/02.webp",
+      "rating": 4,
+      "price": 800
+    },
+    {
+      "title": "Rome, Italy",
+      "text": "5 nights and 4 days in 5 star hotel, breakfast and lunch included. Very popular during the renaissance. Passage and going through the cites of the world in classical literature.",
+      "image": "/en/images/offers/03.webp",
+      "rating": 5,
+      "price": 750
+    },
+    {
+      "title": "Venice, Italy",
+      "text": "Very popular during the renaissance. Passage and going through the cites of the world in classical literature.",
+      "image": "/en/images/offers/02.webp",
+      "rating": 5,
+      "price": 600
+    }
+  ]
+}
