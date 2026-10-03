@@ -1,8 +1,29 @@
 ---
 import "../styles/global.css";
+import "../styles/custom.css";
 
 import Header from "@blocks/Header.astro";
 import Footer from "@blocks/Footer.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string | null;
+  // "light" = teks putih (untuk latar gelap, dipakai home)
+  // "dark"  = teks gelap (untuk latar putih, dipakai blog dan halaman lain)
+  headerTheme?: "light" | "dark";
+  // "full"    = footer lengkap (default untuk home)
+  // "minimal" = hanya baris copyright (default untuk halaman dengan headerTheme="dark")
+  footer?: "full" | "minimal";
+}
+
+const SITE_NAME = "Bandung Travel Guide";
+
+const { title, description, image, headerTheme = "light", footer } = Astro.props;
+const footerMode = footer ?? (headerTheme === "dark" ? "minimal" : "full");
+const year = new Date().getFullYear();
+const pageTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 ---
 
 <!doctype html>
@@ -13,12 +34,25 @@ import Footer from "@blocks/Footer.astro";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
-    <title>Travellian</title>
+    <title>{pageTitle}</title>
+    {description && <meta name="description" content={description} />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={pageTitle} />
+    {description && <meta property="og:description" content={description} />}
+    {image && <meta property="og:image" content={image} />}
+    {canonical && <meta property="og:url" content={canonical} />}
   </head>
   <body>
-    <Header />
+    <Header theme={headerTheme} />
     <slot />
-    <Footer />
+    {footerMode === "full" ? (
+      <Footer />
+    ) : (
+      <footer class="site-copyright">
+        <p>Copyright &copy; {year} {SITE_NAME}. All rights reserved.</p>
+      </footer>
+    )}
    	<script>
  	    import { initSliders } from "src/scripts/slider";
      	document.addEventListener("DOMContentLoaded", () => {
@@ -27,3 +61,14 @@ import Footer from "@blocks/Footer.astro";
    	</script>
 	</body>
 </html>
+
+<style>
+  .site-copyright {
+    background: var(--secondary-color, #18222f);
+    color: #c9d2db;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  .site-copyright p { margin: 0; }
+</style>

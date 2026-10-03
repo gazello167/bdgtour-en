@@ -1,0 +1,190 @@
+---
+import Layout from "@layouts/Layout.astro";
+import PostGrid from "../../components/blocks/PostGrid.astro";
+import FactsBox from "../../components/blocks/FactsBox.astro";
+import ItemList from "../../components/blocks/ItemList.astro";
+import {
+  getAllPosts,
+  CATEGORIES,
+  DESTINATIONS,
+  isDestinationGuide,
+  categoryUrl,
+  destinationUrl,
+  formatDate,
+  isoDate,
+  readingMinutes,
+  type Post,
+  type CategoryKey,
+} from "../../lib/posts";
+
+export async function getStaticPaths() {
+  const all = await getAllPosts();
+  return all
+    .filter((p) => !isDestinationGuide(p)) // panduan destinasi tampil di /destinations/<nama>/
+    .map((post) => {
+      // Artikel terkait: destinasi yang sama paling diutamakan, lalu kategori yang sama
+      const rank = (p: Post) =>
+        (post.destination && p.destination === post.destination ? 2 : 0) +
+        (p.category === post.category ? 1 : 0);
+      const related = all
+        .filter((p) => p.slug !== post.slug && rank(p) > 0)
+        .sort((a, b) => rank(b) - rank(a))
+        .slice(0, 3);
+      return { params: { category: post.category, slug: post.slug }, props: { post, related } };
+    });
+}
+
+interface Props {
+  post: Post;
+  related: Post[];
+}
+
+const { post, related } = Astro.props;
+
+const base = import.meta.env.BASE_URL;
+const cat = CATEGORIES[post.category];
+const dest = post.destination ? DESTINATIONS[post.destination] : null;
+const minutes = readingMinutes(post.content);
+const updated = post.updated_at && post.updated_at !== post.created_at ? post.updated_at : null;
+
+const itemsHeading: Record<CategoryKey, string> = {
+  food: "Where to eat",
+  hotels: "Where to stay",
+  "things-to-do": "Places to see",
+  destinations: "Highlights",
+  itineraries: "Stops",
+  "travel-tips": "Worth knowing",
+};
+
+// Data terstruktur untuk Google
+const abs = (path: string) => (Astro.site ? new URL(path, Astro.site).href : path);
+const crumbs = [
+  { name: "Home", url: base },
+  { name: cat.label, url: categoryUrl(post.category) },
+  { name: post.title, url: Astro.url.pathname },
+];
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: crumbs.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: c.name,
+      item: abs(c.url),
+    })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt ?? undefined,
+    image: post.image_url ?? undefined,
+    datePublished: isoDate(post.created_at),
+    dateModified: isoDate(post.updated_at ?? post.created_at),
+    mainEntityOfPage: abs(Astro.url.pathname),
+  },
+];
+const jsonLdString = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
+---
+
+<Layout title={post.title} description={post.excerpt ?? undefined} image={post.image_url} headerTheme="dark">
+  <main class="post">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href={base}>Home</a>
+      <span aria-hidden="true">/</span>
+      <a href={categoryUrl(post.category)}>{cat.label}</a>
+    </nav>
+
+    <header class="head">
+      <h1>{post.title}</h1>
+      <p class="meta">
+        {updated ? `Updated ${formatDate(updated, true)}` : formatDate(post.created_at, true)}
+        <span aria-hidden="true">&middot;</span> {minutes} min read
+        {post.days && <><span aria-hidden="true">&middot;</span> {post.days} {post.days === 1 ? "day" : "days"}</>}
+        {dest && post.destination && (
+          <>
+            <span aria-hidden="true">&middot;</span>
+            <a href={destinationUrl(post.destination)}>{dest.label}</a>
+          </>
+        )}
+      </p>
+    </header>
+
+    {post.image_url && (
+      <figure class="hero">
+        <img src={post.image_url} alt={post.title} fetchpriority="high" decoding="async" />
+      </figure>
+    )}
+
+    <FactsBox facts={post.facts} />
+
+    {post.content && <article class="prose" set:html={post.content} />}
+
+    <ItemList items={post.items} heading={itemsHeading[post.category]} />
+
+    <aside class="cta">
+      <h2>Planning a trip to Bandung?</h2>
+      <p>Get a local guide, a private driver and a plan that fits your days.</p>
+      <a class="btn" href={base}>Explore our tours</a>
+    </aside>
+
+    {related.length > 0 && (
+      <section class="related" aria-label="More articles">
+        <h2>Keep reading</h2>
+        <PostGrid posts={related} />
+      </section>
+    )}
+  </main>
+
+  <script type="application/ld+json" set:html={jsonLdString} />
+</Layout>
+
+<style>
+  .post {
+    --accent: var(--bt-accent, #ff7757);
+    --ink: var(--bt-ink, #18222f);
+    --muted: var(--bt-muted, #5d6874);
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 8rem 1.25rem 5rem;
+    color: var(--ink);
+  }
+  .crumbs { display: flex; gap: 0.5rem; font-size: 0.9rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .crumbs a { color: var(--muted); text-decoration: none; }
+  .crumbs a:hover { color: var(--accent); }
+
+  .head { max-width: 46rem; margin-bottom: 2rem; }
+  .head h1 { font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 500; line-height: 1.12; color: var(--ink); margin: 0 0 1rem; }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.25rem 0.6rem; color: var(--muted); font-size: 0.95rem; margin: 0; }
+  .meta a { color: var(--accent); text-underline-offset: 3px; }
+
+  .hero { margin: 0 0 3rem; border-radius: 1.25rem; overflow: hidden; background: #e8edf0; }
+  .hero img { display: block; width: 100%; max-height: 560px; object-fit: cover; aspect-ratio: 16 / 9; }
+
+  .prose { max-width: 42rem; margin: 0 auto; font-size: 1.1rem; line-height: 1.8; color: #2b3644; }
+  .prose :global(p) { margin: 0 0 1.4rem; }
+  .prose :global(h2) { font-size: 1.7rem; font-weight: 500; line-height: 1.25; color: var(--ink); margin: 2.5rem 0 1rem; }
+  .prose :global(h3) { font-size: 1.3rem; font-weight: 500; color: var(--ink); margin: 2rem 0 0.75rem; }
+  .prose :global(a) { color: var(--accent); text-underline-offset: 3px; }
+  .prose :global(ul), .prose :global(ol) { margin: 0 0 1.4rem; padding-left: 1.4rem; }
+  .prose :global(li) { margin-bottom: 0.4rem; }
+  .prose :global(img) { display: block; max-width: 100%; height: auto; border-radius: 1rem; margin: 2rem 0; }
+  .prose :global(blockquote) { margin: 2rem 0; padding: 0.25rem 0 0.25rem 1.25rem; border-left: 4px solid var(--accent); color: var(--ink); font-size: 1.2rem; }
+
+  .cta { max-width: 42rem; margin: 3.5rem auto 0; padding: 2rem; border-radius: 1.25rem; background: var(--ink); color: #fff; }
+  .cta h2 { font-size: 1.5rem; font-weight: 500; color: #fff; margin: 0 0 0.5rem; }
+  .cta p { color: #c9d2db; line-height: 1.6; margin: 0 0 1.25rem; }
+  .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 0.6rem; background: var(--accent); color: #fff; font-weight: 500; text-decoration: none; }
+  .btn:hover { filter: brightness(1.08); }
+
+  .related { margin-top: 5rem; padding-top: 3rem; border-top: 1px solid #e3e8ec; }
+  .related h2 { font-size: 1.6rem; font-weight: 500; color: var(--ink); margin: 0 0 1.5rem; }
+
+  a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 0.4rem; }
+
+  @media (max-width: 800px) {
+    .post { padding-top: 6.5rem; }
+    .prose { font-size: 1.05rem; }
+  }
+</style>

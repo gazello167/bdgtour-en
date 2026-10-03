@@ -1,0 +1,118 @@
+---
+import Layout from "@layouts/Layout.astro";
+import PostGrid from "../../components/blocks/PostGrid.astro";
+import FactsBox from "../../components/blocks/FactsBox.astro";
+import ItemList from "../../components/blocks/ItemList.astro";
+import {
+  getAllPosts,
+  CATEGORIES,
+  DESTINATIONS,
+  isDestinationGuide,
+  categoryUrl,
+  type CategoryKey,
+  type DestinationKey,
+} from "../../lib/posts";
+
+export function getStaticPaths() {
+  return Object.keys(DESTINATIONS).map((destination) => ({ params: { destination } }));
+}
+
+const key = Astro.params.destination as DestinationKey;
+const dest = DESTINATIONS[key];
+const base = import.meta.env.BASE_URL;
+
+const all = await getAllPosts();
+// Panduan utama = artikel kategori "destinations" dengan slug sama dengan nama destinasi
+const guide = all.find((p) => p.category === "destinations" && p.slug === key);
+
+const order: CategoryKey[] = ["destinations", "things-to-do", "food", "hotels", "travel-tips", "itineraries"];
+const sections = order
+  .map((c) => ({
+    key: c,
+    title: c === "destinations" ? `More about ${dest.label}` : `${CATEGORIES[c].label} in ${dest.label}`,
+    posts: all.filter((p) => p.destination === key && p.category === c && !isDestinationGuide(p)),
+  }))
+  .filter((s) => s.posts.length > 0);
+---
+
+<Layout
+  title={`${dest.label} travel guide`}
+  description={guide?.excerpt ?? dest.intro}
+  image={guide?.image_url}
+  headerTheme="dark"
+>
+  <main class="dest">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href={base}>Home</a>
+      <span aria-hidden="true">/</span>
+      <a href={categoryUrl("destinations")}>Destinations</a>
+    </nav>
+
+    <header class="head">
+      <h1>{guide?.title ?? dest.label}</h1>
+      <p>{guide?.excerpt || dest.intro}</p>
+    </header>
+
+    {guide?.image_url && (
+      <figure class="hero">
+        <img src={guide.image_url} alt={dest.label} fetchpriority="high" decoding="async" />
+      </figure>
+    )}
+
+    {guide && <FactsBox facts={guide.facts} />}
+    {guide?.content && <article class="prose" set:html={guide.content} />}
+    {guide && <ItemList items={guide.items} heading="Highlights" />}
+
+    {sections.map((s) => (
+      <section class="section" aria-label={s.title}>
+        <h2>{s.title}</h2>
+        <PostGrid posts={s.posts} showCategory={false} />
+      </section>
+    ))}
+
+    {!guide && sections.length === 0 && (
+      <p class="empty">Our {dest.label} guide is on the way.</p>
+    )}
+  </main>
+</Layout>
+
+<style>
+  .dest {
+    --accent: var(--bt-accent, #ff7757);
+    --ink: var(--bt-ink, #18222f);
+    --muted: var(--bt-muted, #5d6874);
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 8rem 1.25rem 5rem;
+    color: var(--ink);
+  }
+  .crumbs { display: flex; gap: 0.5rem; font-size: 0.9rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .crumbs a { color: var(--muted); text-decoration: none; }
+  .crumbs a:hover { color: var(--accent); }
+
+  .head { max-width: 46rem; margin-bottom: 2rem; }
+  .head h1 { font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 500; line-height: 1.12; color: var(--ink); margin: 0 0 0.75rem; }
+  .head p { font-size: 1.05rem; line-height: 1.6; color: var(--muted); margin: 0; }
+  .empty { color: var(--muted); }
+
+  .hero { margin: 0 0 3rem; border-radius: 1.25rem; overflow: hidden; background: #e8edf0; }
+  .hero img { display: block; width: 100%; max-height: 560px; object-fit: cover; aspect-ratio: 16 / 9; }
+
+  .prose { max-width: 42rem; margin: 0 auto; font-size: 1.1rem; line-height: 1.8; color: #2b3644; }
+  .prose :global(p) { margin: 0 0 1.4rem; }
+  .prose :global(h2) { font-size: 1.7rem; font-weight: 500; line-height: 1.25; color: var(--ink); margin: 2.5rem 0 1rem; }
+  .prose :global(h3) { font-size: 1.3rem; font-weight: 500; color: var(--ink); margin: 2rem 0 0.75rem; }
+  .prose :global(a) { color: var(--accent); text-underline-offset: 3px; }
+  .prose :global(ul), .prose :global(ol) { margin: 0 0 1.4rem; padding-left: 1.4rem; }
+  .prose :global(img) { display: block; max-width: 100%; height: auto; border-radius: 1rem; margin: 2rem 0; }
+
+  .section { margin-top: 4rem; padding-top: 3rem; border-top: 1px solid #e3e8ec; }
+  .section h2 { font-size: 1.6rem; font-weight: 500; color: var(--ink); margin: 0 0 1.5rem; }
+
+  a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 0.4rem; }
+
+  @media (max-width: 800px) {
+    .dest { padding-top: 6.5rem; }
+    .prose { font-size: 1.05rem; }
+  }
+</style>

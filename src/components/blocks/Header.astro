@@ -4,8 +4,14 @@ import Link from "@components/ui/Link.astro";
 import Burger from "@components/ui/Burger.astro"
 
 import data from "@data/header.json";
+
+interface Props {
+  theme?: "light" | "dark";
+}
+
+const { theme = "light" } = Astro.props;
 ---
-<header class="header" id="header">
+<header class:list={["header", { "header--dark": theme === "dark" }]} id="header">
   <div class="header__inner">
     <span class="header__logo">
       <Logo type="full" />
@@ -56,6 +62,27 @@ import data from "@data/header.json";
 
   </div>
 </header>
+
+<style is:global>
+  /* Tema gelap: dipakai di halaman berlatar putih (blog, artikel, dll). */
+  .header.header--dark .header__nav-link,
+  .header.header--dark .header__nav-link:visited {
+    color: #18222f;
+  }
+  .header.header--dark .header__nav-link:hover {
+    color: #ff7757;
+  }
+
+  /* Logo & hamburger: jadikan hitam tanpa perlu file baru.
+     Kalau nanti logo diganti PNG berwarna, hapus aturan .header__logo
+     di bawah ini supaya warna aslinya tidak ikut menghitam. 
+  .header.header--dark .header__logo {
+    filter: brightness(0);
+  } */
+  .header.header--dark [class*="burger"] {
+    filter: brightness(0);
+  }
+</style>
 
 <script>
 const header = document.getElementById("header");

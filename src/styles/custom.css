@@ -1,0 +1,86 @@
+/* Warna & ukuran utama blog. Ubah di sini, semua halaman blog ikut berubah. */
+:root {
+  --bt-accent: #ff7757;   /* warna tombol & link */
+  --bt-ink:    #18222f;   /* judul & teks gelap */
+  --bt-muted:  #5d6874;   /* teks sekunder */
+}
+
+/* Contoh override bebas */
+body .blog .blog-head h1 { font-size: 3.5rem; }
+body .post .prose { font-size: 1.15rem; }
+body .header.header--dark {
+  padding: 1rem 3.2rem;
+}
+.header.header--dark .header__nav-link, .header.header--dark .header__nav-link:visited {
+    color: #ffffff;
+}
+/* Halaman header--dark: ikon tetap berwarna, hanya teks logo yang digelapkan */
+.header.header--dark .header__logo svg[role="img"] {
+  filter: brightness(0);
+}
+
+/* Setelah scroll (latar header gelap): teks logo kembali putih */
+.header.header--dark.header--scrolled .header__logo svg[role="img"] {
+  filter: none;
+}
+
+/* Hamburger tetap seperti sebelumnya */
+.header.header--dark.header--scrolled [class*="burger"] {
+  filter: none;
+} 
+
+/* Semua logo di header */
+body .header__logo svg,
+body .header__logo img {
+  height: 40px;
+  width: auto;
+  padding-right: 5px;
+}
+
+/* Layar kecil */
+@media (max-width: 768px) {
+  body .header__logo svg,
+  body .header__logo img {
+    height: 40px;
+	padding-right: 5px;
+  }
+}
+
+/*
+body .header__logo svg:last-child,
+body .header__logo img:last-child {
+  height: 44px;
+  width: auto;
+}
+*/
+/* Header dark + sudah di-scroll: latar jadi gelap, teks & logo kembali putih */
+.header.header--dark.header--scrolled .header__nav-link,
+.header.header--dark.header--scrolled .header__nav-link:visited {
+  color: #fff;
+}
+.header.header--dark.header--scrolled .header__nav-link:hover {
+  color: #ff7757;
+}
+/*
+.header.header--dark.header--scrolled .header__logo,
+.header.header--dark.header--scrolled [class*="burger"] {
+  filter: none;   /* batalkan efek hitam, kembali ke warna putih bawaan 
+} */
+
+/*
+.header.header--dark .fastrans-logo polygon,
+  .header.header--scrolled .fastrans-logo polygon {
+    fill: #ffffff !important;
+    transition: fill 0.3s ease;
+  }*/
+/* Ikon: warna asli saat di atas, putih setelah di-scroll */
+.header.header--scrolled .fastrans-logo polygon {
+  fill: #ffffff !important;
+  transition: fill 0.3s ease;
+}  
+.post, .blog {
+    padding: 11rem 1.25rem 5rem !important;    
+}
+body .post .prose {
+    font-size: 18px !important;
+}

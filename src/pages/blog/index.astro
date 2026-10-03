@@ -1,31 +1,149 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { queryD1 } from "../../lib/d1";
+import { getAllPosts, postUrl } from "../../lib/posts";
 
-const posts = await queryD1("SELECT * FROM posts ORDER BY created_at DESC");
+const posts = await getAllPosts();
+const base = import.meta.env.BASE_URL;
+const fmt = (d?: string) =>
+  d
+    ? new Date(d.replace(" ", "T") + "Z").toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+    : "";
+const [featured, ...rest] = posts;
 ---
 
-<Layout title="Bandung Tour Articles & News">
-  <main class="container mx-auto py-12 px-4">
-    <h1 class="text-3xl font-bold mb-8">Latest Travel Articles</h1>
+<Layout title="Bandung Tour Articles & News" headerTheme="dark">
+  <main class="blog">
+    <header class="blog-head">
+      <h1>Bandung travel journal</h1>
+      <p>Guides, local tips and itineraries for your trip to Bandung and West Java.</p>
+    </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {posts.map((post: any) => (
-        <article class="card border rounded-lg p-4 shadow-sm">
-          {post.image_url && (
-            <img
-              src={post.image_url}
-              alt={post.title}
-              class="w-full h-48 object-cover rounded mb-4"
-            />
-          )}
-          <h2 class="text-xl font-bold">{post.title}</h2>
-          <p class="text-gray-600 my-2">{post.excerpt}</p>
-          <a href={`${import.meta.env.BASE_URL}blog/${post.slug}/`} class="text-blue-600 font-semibold hover:underline">
-            Read More &rarr;
+    {posts.length === 0 && (
+      <p class="empty">No articles yet. New guides are on the way.</p>
+    )}
+
+    {featured && (
+      <a class="featured" href={postUrl(featured)}>
+        <div class="media">
+          {featured.image_url
+            ? <img src={featured.image_url} alt={featured.title} fetchpriority="high" decoding="async" />
+            : <div class="ph" aria-hidden="true"></div>}
+        </div>
+        <div class="text">
+          <time>{fmt(featured.created_at)}</time>
+          <h2>{featured.title}</h2>
+          <p>{featured.excerpt}</p>
+          <span class="more">Read the guide</span>
+        </div>
+      </a>
+    )}
+
+    {rest.length > 0 && (
+      <section class="grid" aria-label="More articles">
+        {rest.map((post: any) => (
+          <a class="item" href={postUrl(post)}>
+            <div class="media">
+              {post.image_url
+                ? <img src={post.image_url} alt={post.title} loading="lazy" decoding="async" />
+                : <div class="ph" aria-hidden="true"></div>}
+            </div>
+            <time>{fmt(post.created_at)}</time>
+            <h3>{post.title}</h3>
+            <p>{post.excerpt}</p>
           </a>
-        </article>
-      ))}
-    </div>
+        ))}
+      </section>
+    )}
   </main>
 </Layout>
+
+<style>
+  .blog {
+    --accent: #ff7757;
+    --ink: #18222f;
+    --muted: #5d6874;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 8rem 1.25rem 5rem;
+    color: var(--ink);
+  }
+  .blog-head { max-width: 40rem; margin-bottom: 3rem; }
+  .blog-head h1 {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 500;
+    line-height: 1.1;
+    color: var(--ink);
+    margin: 0 0 0.75rem;
+  }
+  .blog-head p { font-size: 1.05rem; line-height: 1.6; color: var(--muted); margin: 0; }
+  .empty { color: var(--muted); }
+
+  a.featured, a.item { color: inherit; text-decoration: none; display: block; }
+  .media { overflow: hidden; border-radius: 1rem; background: #e8edf0; }
+  .media img, .ph { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .ph { background: linear-gradient(135deg, #cfe3dd, #f3d9cf); }
+  time { font-size: 0.85rem; color: var(--muted); }
+
+  .featured {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 2.5rem;
+    align-items: center;
+    margin-bottom: 4rem;
+  }
+  .featured .media { aspect-ratio: 16 / 10; }
+  .featured h2 {
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--ink);
+    margin: 0.5rem 0 0.75rem;
+  }
+  .featured p {
+    color: var(--muted);
+    line-height: 1.65;
+    margin: 0 0 1.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .more { color: var(--accent); font-weight: 500; border-bottom: 2px solid currentColor; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2.5rem 2rem;
+    padding-top: 3rem;
+    border-top: 1px solid #e3e8ec;
+  }
+  .item .media { aspect-ratio: 4 / 3; margin-bottom: 1rem; }
+  .item h3 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--ink);
+    margin: 0.35rem 0 0.5rem;
+  }
+  .item p {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--muted);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .item:hover h3, .featured:hover h2 { color: var(--accent); }
+  a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 0.5rem; }
+
+  @media (max-width: 800px) {
+    .blog { padding-top: 6.5rem; }
+    .featured { grid-template-columns: 1fr; gap: 1.25rem; margin-bottom: 3rem; }
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+import Layout from "@layouts/Layout.astro";
+import PostGrid from "../../components/blocks/PostGrid.astro";
+import {
+  getAllPosts,
+  CATEGORIES,
+  DESTINATIONS,
+  isDestinationGuide,
+  destinationUrl,
+  type CategoryKey,
+} from "../../lib/posts";
+
+export function getStaticPaths() {
+  return Object.keys(CATEGORIES).map((category) => ({ params: { category } }));
+}
+
+const category = Astro.params.category as CategoryKey;
+const meta = CATEGORIES[category];
+
+const all = await getAllPosts();
+let posts = all.filter((p) => p.category === category && !isDestinationGuide(p));
+if (category === "itineraries") {
+  posts = [...posts].sort((a, b) => (a.days ?? 99) - (b.days ?? 99));
+}
+
+// Halaman Destinations menampilkan kartu empat destinasi di atas daftar artikel
+const destinationCards =
+  category === "destinations"
+    ? Object.entries(DESTINATIONS).map(([key, d]) => ({
+        key,
+        ...d,
+        count: all.filter((p) => p.destination === key && !isDestinationGuide(p)).length,
+      }))
+    : [];
+---
+
+<Layout title={meta.label} description={meta.intro} headerTheme="dark">
+  <main class="hub">
+    <header class="head">
+      <h1>{meta.label}</h1>
+      <p>{meta.intro}</p>
+    </header>
+
+    {destinationCards.length > 0 && (
+      <section class="dests" aria-label="Destinations">
+        {destinationCards.map((d) => (
+          <a class="dest" href={destinationUrl(d.key)}>
+            <h2>{d.label}</h2>
+            <p>{d.intro}</p>
+            {d.count > 0 && <span>{d.count} {d.count === 1 ? "article" : "articles"}</span>}
+          </a>
+        ))}
+      </section>
+    )}
+
+    {posts.length > 0
+      ? <PostGrid posts={posts} showCategory={false} />
+      : destinationCards.length === 0 && <p class="empty">No articles in {meta.label} yet. New guides are on the way.</p>}
+  </main>
+</Layout>
+
+<style>
+  .hub {
+    --accent: var(--bt-accent, #ff7757);
+    --ink: var(--bt-ink, #18222f);
+    --muted: var(--bt-muted, #5d6874);
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 8rem 1.25rem 5rem;
+    color: var(--ink);
+  }
+  .head { max-width: 40rem; margin-bottom: 3rem; }
+  .head h1 { font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 500; line-height: 1.1; color: var(--ink); margin: 0 0 0.75rem; }
+  .head p { font-size: 1.05rem; line-height: 1.6; color: var(--muted); margin: 0; }
+  .empty { color: var(--muted); }
+
+  .dests { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-bottom: 3.5rem; }
+  .dest { display: block; padding: 1.5rem; border-radius: 1rem; background: #f3f6f7; color: inherit; text-decoration: none; }
+  .dest h2 { font-size: 1.4rem; font-weight: 500; color: var(--ink); margin: 0 0 0.5rem; }
+  .dest p { line-height: 1.55; color: var(--muted); margin: 0 0 0.75rem; }
+  .dest span { font-size: 0.9rem; font-weight: 500; color: var(--accent); }
+  .dest:hover h2 { color: var(--accent); }
+  .dest:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+
+  @media (max-width: 800px) {
+    .hub { padding-top: 6.5rem; }
+  }
+</style>

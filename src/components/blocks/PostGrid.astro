@@ -1,0 +1,59 @@
+---
+import { postUrl, formatDate, CATEGORIES, type Post } from "../../lib/posts";
+
+interface Props {
+  posts: Post[];
+  showCategory?: boolean;
+}
+
+const { posts, showCategory = true } = Astro.props;
+---
+
+<div class="grid">
+  {posts.map((p) => (
+    <a class="item" href={postUrl(p)}>
+      <div class="media">
+        {p.image_url
+          ? <img src={p.image_url} alt={p.title} loading="lazy" decoding="async" />
+          : <div class="ph" aria-hidden="true"></div>}
+      </div>
+      <p class="meta">
+        {showCategory && <span class="cat">{CATEGORIES[p.category].label}</span>}
+        {p.days && <span>{p.days} {p.days === 1 ? "day" : "days"}</span>}
+        <time>{formatDate(p.created_at)}</time>
+      </p>
+      <h3>{p.title}</h3>
+      {p.excerpt && <p class="ex">{p.excerpt}</p>}
+    </a>
+  ))}
+</div>
+
+<style>
+  .grid {
+    --accent: var(--bt-accent, #ff7757);
+    --ink: var(--bt-ink, #18222f);
+    --muted: var(--bt-muted, #5d6874);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2.5rem 2rem;
+  }
+  .item { color: inherit; text-decoration: none; display: block; }
+  .media { aspect-ratio: 4 / 3; overflow: hidden; border-radius: 1rem; background: #e8edf0; margin-bottom: 1rem; }
+  .media img, .ph { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .ph { background: linear-gradient(135deg, #cfe3dd, #f3d9cf); }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.25rem 0.75rem; font-size: 0.85rem; color: var(--muted); margin: 0; }
+  .cat { color: var(--accent); font-weight: 500; }
+  h3 { font-size: 1.2rem; font-weight: 500; line-height: 1.3; color: var(--ink); margin: 0.35rem 0 0.5rem; }
+  .ex {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--muted);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .item:hover h3 { color: var(--accent); }
+  .item:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 0.5rem; }
+</style>

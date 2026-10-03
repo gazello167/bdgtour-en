@@ -1,0 +1,37 @@
+---
+import type { Fact } from "../../lib/posts";
+
+interface Props {
+  facts: Fact[];
+}
+
+const { facts } = Astro.props;
+---
+
+{facts.length > 0 && (
+  <dl class="facts">
+    {facts.map((f) => (
+      <div>
+        <dt>{f.label}</dt>
+        <dd>{f.value}</dd>
+      </div>
+    ))}
+  </dl>
+)}
+
+<style>
+  .facts {
+    --ink: var(--bt-ink, #18222f);
+    --muted: var(--bt-muted, #5d6874);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.25rem 1.5rem;
+    max-width: 42rem;
+    margin: 0 auto 2.5rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 1rem;
+    background: #f3f6f7;
+  }
+  dt { font-size: 0.85rem; color: var(--muted); margin: 0 0 0.2rem; }
+  dd { font-weight: 500; color: var(--ink); margin: 0; line-height: 1.4; }
+</style>

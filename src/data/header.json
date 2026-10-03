@@ -1,35 +1,34 @@
 {
   "menu": [
     {
-      "url": "/en/",
-      "text": "Home"
+      "url": "/en/destinations/",
+      "text": "Destinations"
     },
     {
-      "url": "/en/#explore",
-      "text": "Explore"
+      "url": "/en/things-to-do/",
+      "text": "Things to Do"
     },
     {
-      "url": "/en/#travel",
-      "text": "Travel"
+      "url": "/en/food/",
+      "text": "Food"
     },
     {
-      "url": "/en/blog/",
-      "text": "Blog"
+      "url": "/en/hotels/",
+      "text": "Hotels"
     },
     {
-      "url": "/en/#pricing",
-      "text": "Pricing"
+      "url": "/en/travel-tips/",
+      "text": "Travel Tips"
+    },
+    {
+      "url": "/en/itineraries/",
+      "text": "Itineraries"
     }
   ],
   "account": [
     {
-      "url": "#",
-      "text": "Login",
-      "isButton": false
-    },
-    {
-      "url": "#",
-      "text": "Sign up",
+      "url": "/en/itineraries/",
+      "text": "Plan your trip",
       "isButton": true
     }
   ]
