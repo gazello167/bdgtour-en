@@ -1,6 +1,10 @@
 {
   "menu": [
     {
+      "url": "/en/",
+      "text": "Home"
+    },
+    {
       "url": "/en/destinations/",
       "text": "Destinations"
     },
