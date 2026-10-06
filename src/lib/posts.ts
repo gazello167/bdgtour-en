@@ -73,6 +73,13 @@ export interface GalleryImage {
   credit?: string;     // nama fotografer / sumber
 }
 
+export interface PlaceMap {
+  query: string;       // nama tempat untuk peta, mis. "Tangkuban Perahu, Lembang"
+  lat?: number;
+  lng?: number;
+  link?: string;       // link asli dari Sheet (maps.app.goo.gl/...) untuk tombol "Open in Google Maps"
+}
+
 export interface Post {
   id: number;
   slug: string;
@@ -90,6 +97,7 @@ export interface Post {
   facts: Fact[];
   items: Item[];
   gallery: GalleryImage[];
+  map: PlaceMap | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -116,6 +124,21 @@ function parseGallery(value: unknown, fallbackAlt: string): GalleryImage[] {
     }));
 }
 
+function parseMap(value: unknown): PlaceMap | null {
+  if (!value) return null;
+  try {
+    const m = JSON.parse(String(value));
+    const query = String(m?.query || "").trim();
+    const lat = Number(m?.lat), lng = Number(m?.lng);
+    const hasCoord = Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180;
+    if (!query && !hasCoord) return null;
+    const link = typeof m?.link === "string" && /^https:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps|www\.google\.com\/maps|maps\.google\.com)/.test(m.link) ? m.link : undefined;
+    return { query, lat: hasCoord ? lat : undefined, lng: hasCoord ? lng : undefined, link };
+  } catch {
+    return null;
+  }
+}
+
 let cache: Promise<Post[]> | undefined;
 
 export function getAllPosts(): Promise<Post[]> {
@@ -136,6 +159,7 @@ export function getAllPosts(): Promise<Post[]> {
             facts: parseList<Fact>(r.facts),
             items: parseList<Item>(r.items),
             gallery: parseGallery(r.gallery, r.title),
+            map: parseMap(r.map),
           }) as Post
       )
   );

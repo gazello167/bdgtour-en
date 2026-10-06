@@ -1,0 +1,44 @@
+---
+import type { PlaceMap } from "../../lib/posts";
+
+interface Props {
+  map: PlaceMap | null;
+  heading?: string;
+}
+
+const { map, heading = "Location & map" } = Astro.props;
+
+// Iframe dibuat di sini dari data terstruktur, bukan ditulis AI, jadi hanya host Google Maps yang mungkin muncul.
+const q = map ? (map.lat != null && map.lng != null ? `${map.lat},${map.lng}` : map.query) : "";
+const src = map ? `https://www.google.com/maps?q=${encodeURIComponent(q)}&z=14&hl=en&output=embed` : "";
+const openLink = map ? map.link ?? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}` : "";
+---
+
+{map && (
+  <section class="map" aria-label={heading}>
+    <h2>{heading}</h2>
+    <div class="frame">
+      <iframe
+        src={src}
+        title={`Map of ${map.query || "the location"}`}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+      ></iframe>
+    </div>
+    <p>
+      {map.query && <span>{map.query} &middot; </span>}
+      <a href={openLink} target="_blank" rel="noopener">Open in Google Maps</a>
+    </p>
+  </section>
+)}
+
+<style>
+  .map { max-width: 56rem; margin: 3rem auto 0; }
+  h2 { font-size: 1.7rem; font-weight: 500; line-height: 1.25; color: var(--bt-ink, #18222f); margin: 0 0 1.25rem; }
+  .frame { position: relative; aspect-ratio: 16 / 9; border-radius: 1rem; overflow: hidden; background: #e8edf0; }
+  iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  p { margin: 0.75rem 0 0; font-size: 0.95rem; color: var(--bt-muted, #5d6874); }
+  a { color: var(--bt-accent, #ff7757); text-underline-offset: 3px; }
+  @media (max-width: 640px) { .frame { aspect-ratio: 4 / 3; } }
+</style>

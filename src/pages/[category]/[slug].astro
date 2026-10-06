@@ -4,6 +4,7 @@ import PostGrid from "../../components/blocks/PostGrid.astro";
 import FactsBox from "../../components/blocks/FactsBox.astro";
 import ItemList from "../../components/blocks/ItemList.astro";
 import Gallery from "../../components/blocks/Gallery.astro";
+import MapEmbed from "../../components/blocks/MapEmbed.astro";
 import {
   getAllPosts,
   CATEGORIES,
@@ -124,6 +125,8 @@ const jsonLdString = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
     {post.content && <article class="prose" set:html={post.content} />}
 
     <Gallery images={post.gallery} />
+
+    <MapEmbed map={post.map} />
 
     <ItemList items={post.items} heading={itemsHeading[post.category]} />
 
