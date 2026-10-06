@@ -62,9 +62,9 @@ const sections = order
       </figure>
     )}
 
+    {guide && <Gallery images={guide.gallery} />}
     {guide && <FactsBox facts={guide.facts} />}
     {guide?.content && <article class="prose" set:html={guide.content} />}
-    {guide && <Gallery images={guide.gallery} />}
     {guide && <MapEmbed map={guide.map} />}
     {guide && <ItemList items={guide.items} heading="Highlights" />}
 

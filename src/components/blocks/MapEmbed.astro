@@ -6,7 +6,7 @@ interface Props {
   heading?: string;
 }
 
-const { map, heading = "Location & map" } = Astro.props;
+const { map, heading = "Location & Map" } = Astro.props;
 
 // Iframe dibuat di sini dari data terstruktur, bukan ditulis AI, jadi hanya host Google Maps yang mungkin muncul.
 const q = map ? (map.lat != null && map.lng != null ? `${map.lat},${map.lng}` : map.query) : "";

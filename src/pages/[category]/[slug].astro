@@ -120,11 +120,11 @@ const jsonLdString = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
       </figure>
     )}
 
+    <Gallery images={post.gallery} />
+
     <FactsBox facts={post.facts} />
 
     {post.content && <article class="prose" set:html={post.content} />}
-
-    <Gallery images={post.gallery} />
 
     <MapEmbed map={post.map} />
 
