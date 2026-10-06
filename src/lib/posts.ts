@@ -66,10 +66,19 @@ export interface Item {
   note?: string;
 }
 
+export interface GalleryImage {
+  url: string;
+  alt: string;         // deskripsi isi foto (dibaca screen reader dan Google Images)
+  caption?: string;    // tampil di lightbox
+  credit?: string;     // nama fotografer / sumber
+}
+
 export interface Post {
   id: number;
   slug: string;
-  title: string;
+  title: string;              // = H1 di halaman
+  title_tag: string | null;   // = <title> di hasil pencarian Google (kosong = dibuat otomatis dari title)
+  meta_desc: string | null;   // = meta description (kosong = pakai excerpt)
   content: string;
   excerpt: string | null;
   image_url: string | null;
@@ -80,6 +89,7 @@ export interface Post {
   updated_at: string | null;
   facts: Fact[];
   items: Item[];
+  gallery: GalleryImage[];
 }
 
 // ---------------------------------------------------------------------------
@@ -93,6 +103,17 @@ function parseList<T>(value: unknown): T[] {
   } catch {
     return [];
   }
+}
+
+function parseGallery(value: unknown, fallbackAlt: string): GalleryImage[] {
+  return parseList<GalleryImage>(value)
+    .filter((g) => g && typeof g.url === "string" && /^(https?:\/\/|\/)/.test(g.url))
+    .map((g) => ({
+      url: g.url,
+      alt: String(g.alt || g.caption || fallbackAlt).trim(),
+      caption: g.caption?.trim() || undefined,
+      credit: g.credit?.trim() || undefined,
+    }));
 }
 
 let cache: Promise<Post[]> | undefined;
@@ -114,6 +135,7 @@ export function getAllPosts(): Promise<Post[]> {
             destination: r.destination in DESTINATIONS ? r.destination : null,
             facts: parseList<Fact>(r.facts),
             items: parseList<Item>(r.items),
+            gallery: parseGallery(r.gallery, r.title),
           }) as Post
       )
   );

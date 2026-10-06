@@ -84,3 +84,6 @@ body .header__logo img:last-child {
 body .post .prose {
     font-size: 18px !important;
 }
+body .prose table { width: 100%; border-collapse: collapse; margin: 0 0 1.4rem; font-size: 0.95em; }
+body .prose th, body .prose td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid #e3e8ec; vertical-align: top; }
+body .prose th { font-weight: 500; background: #f3f6f7; }

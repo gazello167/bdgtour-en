@@ -1,0 +1,225 @@
+---
+import type { GalleryImage } from "../../lib/posts";
+
+interface Props {
+  images: GalleryImage[];
+  heading?: string;
+}
+
+const { images, heading = "Photo gallery" } = Astro.props;
+
+// Mosaik menampilkan maksimal 5 foto. Sisanya hanya bisa dilihat di lightbox ("+N photos").
+const MAX_TILES = 5;
+const shown = images.slice(0, MAX_TILES);
+const rest = images.slice(MAX_TILES);
+---
+
+{images.length > 0 && (
+  <section class="gallery" aria-label={heading} data-gallery>
+    <h2>{heading}</h2>
+
+    <ul class={`mosaic n${shown.length}`}>
+      {shown.map((img, i) => (
+        <li>
+          <a
+            href={img.url}
+            data-alt={img.alt}
+            data-caption={img.caption ?? ""}
+            data-credit={img.credit ?? ""}
+          >
+            <img src={img.url} alt={img.alt} loading="lazy" decoding="async" />
+            {rest.length > 0 && i === shown.length - 1 && (
+              <span class="more">+{rest.length} {rest.length === 1 ? "photo" : "photos"}</span>
+            )}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    {rest.length > 0 && (
+      <div hidden>
+        {rest.map((img) => (
+          <a
+            href={img.url}
+            data-alt={img.alt}
+            data-caption={img.caption ?? ""}
+            data-credit={img.credit ?? ""}
+          >{img.alt}</a>
+        ))}
+      </div>
+    )}
+
+    <dialog class="lightbox" aria-label="Photo viewer">
+      <button class="btn close" type="button" aria-label="Close photo viewer">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+      </button>
+      <button class="btn prev" type="button" aria-label="Previous photo">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+      </button>
+      <button class="btn next" type="button" aria-label="Next photo">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+      </button>
+      <figure>
+        <img alt="" />
+        <figcaption>
+          <span class="cap"></span>
+          <span class="credit"></span>
+        </figcaption>
+      </figure>
+      <p class="count" aria-live="polite"></p>
+    </dialog>
+  </section>
+)}
+
+<style>
+  .gallery {
+    --accent: var(--bt-accent, #ff7757);
+    --ink: var(--bt-ink, #18222f);
+    max-width: 56rem;
+    margin: 3rem auto 0;
+  }
+  h2 { font-size: 1.7rem; font-weight: 500; line-height: 1.25; color: var(--ink); margin: 0 0 1.25rem; }
+
+  /* ---- Mosaik ---- */
+  .mosaic {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 11rem;
+    gap: 0.5rem;
+  }
+  .mosaic li { position: relative; overflow: hidden; border-radius: 0.75rem; background: #e8edf0; }
+  .mosaic a { display: block; width: 100%; height: 100%; color: inherit; }
+  .mosaic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  @media (prefers-reduced-motion: no-preference) {
+    .mosaic img { transition: transform 0.35s ease; }
+    .mosaic a:hover img { transform: scale(1.04); }
+  }
+
+  .n1 li { grid-column: span 4; grid-row: span 2; }
+  .n2 li { grid-column: span 2; grid-row: span 2; }
+  .n3 li:first-child, .n4 li:first-child, .n5 li:first-child { grid-column: span 2; grid-row: span 2; }
+  .n3 li:not(:first-child) { grid-column: span 2; }
+  .n4 li:nth-child(2) { grid-column: span 2; }
+
+  .more {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(24, 34, 47, 0.62);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  a:focus-visible, .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+  @media (max-width: 640px) {
+    .mosaic { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 8.5rem; }
+    .n1 li, .n3 li:not(:first-child), .n4 li:nth-child(2) { grid-column: span 1; grid-row: span 1; }
+    .n1 li, .n3 li:first-child, .n4 li:first-child, .n5 li:first-child { grid-column: span 2; grid-row: span 2; }
+    .n2 li { grid-column: span 1; grid-row: span 2; }
+    .n4 li:last-child { grid-column: span 2; }
+  }
+
+  /* ---- Lightbox ---- */
+  .lightbox {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgba(10, 16, 24, 0.94);
+    color: #fff;
+  }
+  .lightbox[open] { display: grid; place-items: center; }
+  .lightbox::backdrop { background: rgba(10, 16, 24, 0.94); }
+  figure { margin: 0; max-width: min(92vw, 1200px); display: grid; gap: 0.75rem; justify-items: center; }
+  figure img { display: block; max-width: 100%; max-height: 78vh; width: auto; height: auto; border-radius: 0.5rem; }
+  figcaption { text-align: center; max-width: 42rem; line-height: 1.5; }
+  .cap { display: block; font-size: 1rem; }
+  .credit { display: block; font-size: 0.85rem; color: #aab4bf; }
+  .cap:empty, .credit:empty { display: none; }
+  .count { position: absolute; top: 1.25rem; left: 1.25rem; margin: 0; font-size: 0.9rem; color: #aab4bf; }
+
+  .btn {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    cursor: pointer;
+  }
+  .btn:hover { background: rgba(255, 255, 255, 0.24); }
+  .close { top: 1rem; right: 1rem; }
+  .prev { left: 1rem; top: 50%; transform: translateY(-50%); }
+  .next { right: 1rem; top: 50%; transform: translateY(-50%); }
+  .lightbox[data-single] .prev, .lightbox[data-single] .next, .lightbox[data-single] .count { display: none; }
+
+  @media (max-width: 640px) {
+    .prev, .next { top: auto; bottom: 1rem; transform: none; }
+    .prev { left: 1rem; }
+    .next { right: 1rem; }
+    figure img { max-height: 68vh; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-gallery]").forEach((root) => {
+    const links = Array.from(root.querySelectorAll<HTMLAnchorElement>("a[data-alt]"));
+    const dlg = root.querySelector<HTMLDialogElement>("dialog");
+    if (!dlg || links.length === 0) return;
+
+    const img = dlg.querySelector<HTMLImageElement>("figure img")!;
+    const cap = dlg.querySelector<HTMLElement>(".cap")!;
+    const credit = dlg.querySelector<HTMLElement>(".credit")!;
+    const count = dlg.querySelector<HTMLElement>(".count")!;
+    if (links.length === 1) dlg.setAttribute("data-single", "");
+
+    let index = 0;
+    const show = (n: number) => {
+      index = (n + links.length) % links.length;
+      const a = links[index];
+      img.src = a.href;
+      img.alt = a.dataset.alt ?? "";
+      cap.textContent = a.dataset.caption ?? "";
+      credit.textContent = a.dataset.credit ? `Photo: ${a.dataset.credit}` : "";
+      count.textContent = `${index + 1} / ${links.length}`;
+      // muat foto sebelah supaya perpindahan terasa cepat
+      [index + 1, index - 1].forEach((m) => {
+        const pre = new Image();
+        pre.src = links[(m + links.length) % links.length].href;
+      });
+    };
+
+    links.forEach((a, n) => {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        show(n);
+        dlg.showModal();
+        document.body.style.overflow = "hidden";
+      });
+    });
+
+    dlg.querySelector(".prev")?.addEventListener("click", () => show(index - 1));
+    dlg.querySelector(".next")?.addEventListener("click", () => show(index + 1));
+    dlg.querySelector(".close")?.addEventListener("click", () => dlg.close());
+    // klik di area kosong (bukan foto/tombol) menutup
+    dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") show(index - 1);
+      if (e.key === "ArrowRight") show(index + 1);
+    });
+    dlg.addEventListener("close", () => { document.body.style.overflow = ""; });
+  });
+</script>

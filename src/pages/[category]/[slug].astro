@@ -3,6 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import PostGrid from "../../components/blocks/PostGrid.astro";
 import FactsBox from "../../components/blocks/FactsBox.astro";
 import ItemList from "../../components/blocks/ItemList.astro";
+import Gallery from "../../components/blocks/Gallery.astro";
 import {
   getAllPosts,
   CATEGORIES,
@@ -46,6 +47,7 @@ const cat = CATEGORIES[post.category];
 const dest = post.destination ? DESTINATIONS[post.destination] : null;
 const minutes = readingMinutes(post.content);
 const updated = post.updated_at && post.updated_at !== post.created_at ? post.updated_at : null;
+const metaDesc = post.meta_desc || post.excerpt || undefined;
 
 const itemsHeading: Record<CategoryKey, string> = {
   food: "Where to eat",
@@ -78,7 +80,7 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "Article",
     headline: post.title,
-    description: post.excerpt ?? undefined,
+    description: metaDesc,
     image: post.image_url ?? undefined,
     datePublished: isoDate(post.created_at),
     dateModified: isoDate(post.updated_at ?? post.created_at),
@@ -88,7 +90,7 @@ const jsonLd = [
 const jsonLdString = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
 ---
 
-<Layout title={post.title} description={post.excerpt ?? undefined} image={post.image_url} headerTheme="dark">
+<Layout title={post.title} titleTag={post.title_tag} description={metaDesc} image={post.image_url} headerTheme="dark">
   <main class="post">
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href={base}>Home</a>
@@ -120,6 +122,8 @@ const jsonLdString = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
     <FactsBox facts={post.facts} />
 
     {post.content && <article class="prose" set:html={post.content} />}
+
+    <Gallery images={post.gallery} />
 
     <ItemList items={post.items} heading={itemsHeading[post.category]} />
 

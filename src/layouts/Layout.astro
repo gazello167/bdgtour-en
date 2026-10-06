@@ -7,6 +7,9 @@ import Footer from "@blocks/Footer.astro";
 
 interface Props {
   title?: string;
+  // Title tag lengkap dari CMS/AI. Kalau diisi, dipakai APA ADANYA (tanpa akhiran nama situs).
+  // Kalau kosong, <title> dibuat dari `title` + " | Bandung Travel Guide".
+  titleTag?: string | null;
   description?: string;
   image?: string | null;
   // "light" = teks putih (untuk latar gelap, dipakai home)
@@ -19,10 +22,10 @@ interface Props {
 
 const SITE_NAME = "Bandung Travel Guide";
 
-const { title, description, image, headerTheme = "light", footer } = Astro.props;
+const { title, titleTag, description, image, headerTheme = "light", footer } = Astro.props;
 const footerMode = footer ?? (headerTheme === "dark" ? "minimal" : "full");
 const year = new Date().getFullYear();
-const pageTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
+const pageTitle = titleTag?.trim() || (title ? `${title} | ${SITE_NAME}` : SITE_NAME);
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 ---
 
@@ -53,13 +56,13 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
         <p>Copyright &copy; {year} {SITE_NAME}. All rights reserved.</p>
       </footer>
     )}
-   	<script>
- 	    import { initSliders } from "src/scripts/slider";
-     	document.addEventListener("DOMContentLoaded", () => {
-       	initSliders();
-     	});
-   	</script>
-	</body>
+    <script>
+      import { initSliders } from "src/scripts/slider";
+      document.addEventListener("DOMContentLoaded", () => {
+        initSliders();
+      });
+    </script>
+  </body>
 </html>
 
 <style>
@@ -70,5 +73,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
     padding: 1.5rem 1rem;
     font-size: 0.9rem;
   }
-  .site-copyright p { margin: 0; }
+  .site-copyright p {
+    margin: 0;
+  }
 </style>

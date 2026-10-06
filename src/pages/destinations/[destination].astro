@@ -3,6 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import PostGrid from "../../components/blocks/PostGrid.astro";
 import FactsBox from "../../components/blocks/FactsBox.astro";
 import ItemList from "../../components/blocks/ItemList.astro";
+import Gallery from "../../components/blocks/Gallery.astro";
 import {
   getAllPosts,
   CATEGORIES,
@@ -37,7 +38,8 @@ const sections = order
 
 <Layout
   title={`${dest.label} travel guide`}
-  description={guide?.excerpt ?? dest.intro}
+  titleTag={guide?.title_tag}
+  description={guide?.meta_desc || guide?.excerpt || dest.intro}
   image={guide?.image_url}
   headerTheme="dark"
 >
@@ -61,6 +63,7 @@ const sections = order
 
     {guide && <FactsBox facts={guide.facts} />}
     {guide?.content && <article class="prose" set:html={guide.content} />}
+    {guide && <Gallery images={guide.gallery} />}
     {guide && <ItemList items={guide.items} heading="Highlights" />}
 
     {sections.map((s) => (
