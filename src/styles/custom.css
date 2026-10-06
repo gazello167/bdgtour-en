@@ -78,6 +78,13 @@ body .header__logo img:last-child {
   fill: #ffffff !important;
   transition: fill 0.3s ease;
 }  
+
+.crumbs { font-size: .9em !important; }
+.meta { font-size: .8em !important; }
+
+.head, .prose, .gallery {
+    max-width: 100% !important;
+}
 .post, .blog {
     padding: 11rem 1.25rem 5rem !important;    
 }
@@ -87,3 +94,155 @@ body .post .prose {
 body .prose table { width: 100%; border-collapse: collapse; margin: 0 0 1.4rem; font-size: 0.95em; }
 body .prose th, body .prose td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid #e3e8ec; vertical-align: top; }
 body .prose th { font-weight: 500; background: #f3f6f7; }
+
+.cta {
+    max-width: 60% !important;
+}
+.map {
+    max-width: 80% !important;
+}
+@media (max-width: 768px) {
+.cta {
+    max-width: 100% !important;
+}
+.map {
+    max-width: 100% !important;
+}
+}
+
+/* --- H2: Judul Seksi Utama --- */
+.prose h2 {
+  font-size: 1.5em !important;
+  color: #1a202c !important; /* Hitam abu-abu elegan */
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  position: relative;
+  padding-left: 1rem;
+  border-left: 4px solid #ff6b52; /* Akses garis aksen oranye coral */
+}
+
+/* --- H3: Sub-Judul / Pertanyaan FAQ --- */
+.prose h3 {
+  font-size: 1.3em !important;  
+  color: #2d3748 !important;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Menambahkan aksen titik kecil atau ikon unik sebelum H3 */
+.prose h3::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #ff6b52;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   STYLING KHUSUS SEKSI FAQ (.faq)
+   ========================================================= */
+
+/* Wadah Utama FAQ */
+.faq {
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 2px dashed #e2e8f0;
+}
+
+/* --- H2 FAQ --- */
+.faq h2 {
+  font-size: 1.4em !important;
+  font-weight: 600 !important;;
+  color: #1a202c;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Rata kiri */
+  gap: 0.75rem;
+  border-left: none !important; /* Hapus garis border-left dari H2 artikel biasa */
+  padding-left: 0 !important;
+}
+
+/* Aksen Khusus Sebelum H2 FAQ (Beda dari artikel) */
+.faq h2::before {
+  content: "FAQ";
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #ffffff;
+  background-color: #ff6b52; /* Warna coral khas situs */
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* --- H3 FAQ (Pertanyaan) --- */
+.faq h3 {
+  font-size: 1.1em !important;;  
+  color: #2d3748;
+  background-color: #ffffff;
+  padding: 1rem 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 0;
+  border-radius: 12px 12px 0 0;
+  border: 1px solid #e2e8f0;
+  border-bottom: none;
+  text-align: left !important;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Rata kiri */
+  gap: 0.6rem;
+}
+
+/* Aksen Khusus Sebelum H3 FAQ (Menggantikan dot bundar artikel biasa) */
+.faq h3::before {
+  content: "Q.";
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #ff6b52; /* Warna coral */
+  background: none; /* Menghapus bulatan dari artikel biasa */
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Menghapus elemen ::after jika ada */
+.faq h3::after {
+  content: none;
+}
+
+/* --- Paragraf Jawaban FAQ --- */
+.faq h3 + p {
+  background-color: #f8fafc;
+  color: #4a5568;
+  font-size: 18px;
+  line-height: 1.65;
+  padding: 1.25rem;
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  border-radius: 0 0 12px 12px;
+  border: 1px solid #e2e8f0;
+  border-top: 1px solid #edf2f7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  text-align: left; /* Memastikan jawaban juga rata kiri */
+}
+
+/* Hover Effect pada Pertanyaan FAQ */
+.faq h3:hover {
+  background-color: #fff5f3;
+  color: #ff6b52;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+	
