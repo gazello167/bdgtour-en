@@ -10,7 +10,6 @@ import data from "@data/footer.json";
 
     <div class="footer__col">
       <Logo type="full" />
-      <p class="footer__text">{data.copyright}</p>
     </div>
 
     {
@@ -37,7 +36,7 @@ import data from "@data/footer.json";
         {
           data.social.list.map(item => (
             <li class="footer__list-item">
-              <a href={item.url} class="footer__link footer__link--social">
+              <a href={item.url} target="_blank" class="footer__link footer__link--social">
                 <Icon name={item.icon} />
               </a>
             </li>
@@ -47,4 +46,5 @@ import data from "@data/footer.json";
     </div>
 
   </div>
+<p class="footer__text">{data.copyright}</p>
 </footer>

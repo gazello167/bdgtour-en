@@ -9,7 +9,6 @@ const BASE = rawBase.endsWith("/") ? rawBase : rawBase + "/";
 export interface CmsDestination {
   src: string;
   alt: string;
-  href?: string;
 }
 
 export interface CmsTestimonial {
@@ -45,7 +44,6 @@ async function loadManifest(dir: string): Promise<any[]> {
 }
 
 const text = (v: unknown, max: number) => String(v ?? "").trim().slice(0, max);
-const safeLink = (v: unknown) => (/^\/(?!\/)[^\s"'<>]*$/.test(String(v ?? "").trim()) ? String(v).trim() : undefined);
 
 // Foto tanpa alt text tidak ditampilkan di home.
 export async function getDestinationImages(): Promise<CmsDestination[]> {
@@ -53,7 +51,6 @@ export async function getDestinationImages(): Promise<CmsDestination[]> {
     .map((r) => ({
       src: `${BASE}images/destinations/${r.file}`,
       alt: text(r.alt, 200),
-      href: safeLink(r.link),
     }))
     .filter((r) => r.alt)
     .slice(0, MAX_ITEMS);

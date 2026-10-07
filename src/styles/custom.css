@@ -30,7 +30,7 @@ body .header.header--dark {
 } 
 
 /* Semua logo di header */
-body .header__logo svg,
+body .header__logo svg, body .footer__col svg,
 body .header__logo img {
   height: 40px;
   width: auto;
@@ -78,13 +78,33 @@ body .header__logo img:last-child {
   fill: #ffffff !important;
   transition: fill 0.3s ease;
 }  
-
+.section { padding: 45px !important; }
+.button-submit { font-size: 1.6em !important; }
+.subscribe-form h2  { font-size: 3em !important; }
+@media screen and (max-width: 767px) {
+   .section { padding: 30px !important; }
+   .heading--decor { font-size: 2.4em !important; }
+   .subscribe-form h2  { font-size: 2em !important; }
+}
+.dest-lightbox { background: #0a101800 !important;}
+.footer {
+    padding: 15rem 3.2rem 3rem !important;
+}
+.footer__inner {
+    margin-bottom: 3em;
+} 
+.head p { font-size: 1.1em !important; }
+.dest h2, .cta h2 { font-size: 1.2em !important; }
+.grid h3 { font-size: 1.2em !important; }
+/*.grid p { font-size: .95em !important; }
+.dest span { font-size: .95em !important; }
 .crumbs { font-size: .9em !important; }
-.meta { font-size: .8em !important; }
-
+.head .meta { font-size: .8em !important; } */
+.dest span, .grid p, .crumbs, .head .meta, .gallery p, .map p { font-size: .9em !important; }
 .head, .prose, .gallery {
     max-width: 100% !important;
 }
+
 .post, .blog {
     padding: 11rem 1.25rem 5rem !important;    
 }
@@ -275,7 +295,7 @@ body .prose th { font-weight: 500; background: #f3f6f7; }
   background-size: contain;
 }	
 
-.related {
+.related h2 {
     font-size: 1.5em !important;
     font-weight: 500;
     color: var(--ink);
@@ -283,3 +303,6 @@ body .prose th { font-weight: 500; background: #f3f6f7; }
 }
 .related h3 { font-size: 1.2em !important; }
 .related .ex { font-size: .8em !important; }
+.lightbox { background: #e91e6300 !important; }
+
+

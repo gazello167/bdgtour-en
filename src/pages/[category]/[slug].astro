@@ -44,6 +44,7 @@ interface Props {
 const { post, related } = Astro.props;
 
 const base = import.meta.env.BASE_URL;
+const itinerary = "/en/itineraries/";
 const cat = CATEGORIES[post.category];
 const dest = post.destination ? DESTINATIONS[post.destination] : null;
 const minutes = readingMinutes(post.content);
@@ -140,7 +141,7 @@ const jsonLdString = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
     <aside class="cta">
       <h2>Planning a trip to Bandung?</h2>
       <p>Get a local guide, a private driver and a plan that fits your days.</p>
-      <a class="btn" href={base}>Explore our tours</a>
+      <a class="btn" href={itinerary}>Explore our tours</a>
     </aside>
 
     {related.length > 0 && (

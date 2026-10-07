@@ -1,41 +1,16 @@
 {
   "copyright": "Copyright © Bandung-Tour.com 2026 All rights reserved",
   "menus": [
-  {
-    "title": "Menu",
-    "list": [
-      {
-        "url": "#",
-        "text": "Home"
-      },
-      {
-        "url": "#",
-        "text": "Explore"
-      },
-      {
-        "url": "#",
-        "text": "Travel"
-      },
-      {
-        "url": "#",
-        "text": "Blog"
-      },
-      {
-        "url": "#",
-        "text": "Pricing"
-      }
-    ]
-  },
     {
       "title": "Information",
       "list": [
         {
-          "url": "#",
+          "url": "/en/destinations/",
           "text": "Destinations"
         },
         {
-          "url": "#",
-          "text": "Supports"
+          "url": "/en/travel-tips/",
+          "text": "Travel Tips"
         },
         {
           "url": "#",
@@ -51,16 +26,16 @@
       "title": "Contact Info",
       "list": [
         {
-          "url": "tel:+123456789",
-          "text": "+123 456 789"
+          "url": "tel:+628112220194",
+          "text": "+6281 1222 0194"
         },
         {
-          "url": "mailto:info@travellian.com",
-          "text": "info@travellian.com"
+          "url": "mailto:fastrans.travel@gmail.com",
+          "text": "fastrans.travel@gmail.com"
         },
         {
           "url": "#",
-          "text": "1245, New Yourk, USA"
+          "text": "79B Lengkong Besar Street, Bandung, ID"
         }
       ]
     }
