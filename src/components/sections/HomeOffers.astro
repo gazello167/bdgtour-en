@@ -1,36 +1,51 @@
 ---
-import PostGrid from "../blocks/PostGrid.astro";
-import { getAllPosts, categoryUrl } from "../../lib/posts";
+import Section from "@components/sections/Section.astro";
+import OfferCard from "@components/blocks/OfferCard.astro";
+import SliderArrows from "@components/blocks/SliderArrows.astro";
+import Heading from "@components/ui/Heading.astro";
 
-// Artikel kategori Itineraries yang dicentang "Featured" di CMS PHP, paket paling pendek dulu.
-const MAX = 6;
+import data from "@data/special-offer.json"; // hanya untuk judul dan subjudul
+import { getAllPosts, postUrl } from "../../lib/posts";
+
+// Artikel kategori Itineraries yang dicentang "Featured" di CMS PHP (butuh gambar utama), paket terpendek dulu.
 const posts = (await getAllPosts())
-  .filter((p) => p.category === "itineraries" && p.featured)
+  .filter((p) => p.category === "itineraries" && p.featured && p.image_url)
   .sort((a, b) => (a.days ?? 99) - (b.days ?? 99))
-  .slice(0, MAX);
+  .slice(0, 8);
+
+const short = (s: string | null, max = 150) => {
+  const t = (s ?? "").replace(/\s+/g, " ").trim();
+  return t.length <= max ? t : t.slice(0, max).replace(/\s+\S*$/, "") + "...";
+};
 ---
 
 {posts.length > 0 && (
-  <section class="home-sec" aria-labelledby="offers-title">
-    <div class="wrap">
-      <header class="head">
-        <div>
-          <h2 id="offers-title">Special offers: Bandung itineraries</h2>
-          <p class="lead">Ready-made plans from our local team, from a single day to a full 4-day trip.</p>
+  <Section>
+    <div class="offer-slider">
+      <div class="splide splide--grid inverted">
+        <div class="splide__text">
+          <Heading level="h2" decor textAlign="right">{data.title}</Heading>
+          <p>{data.subtitle}</p>
         </div>
-        <a class="all" href={categoryUrl("itineraries")}>All itineraries</a>
-      </header>
-      <PostGrid posts={posts} showCategory={false} />
-    </div>
-  </section>
-)}
 
-<style>
-  .home-sec { --ink: var(--bt-ink, #18222f); --accent: var(--bt-accent, #ff7757); padding: 5rem 1.25rem; background: #f6f8f9; }
-  .wrap { max-width: 1120px; margin: 0 auto; }
-  .head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0.75rem 1.5rem; margin-bottom: 2rem; }
-  h2 { margin: 0; font-size: clamp(1.7rem, 3.5vw, 2.4rem); font-weight: 500; line-height: 1.2; color: var(--ink); }
-  .lead { margin: 0.5rem 0 0; color: var(--bt-muted, #5d6874); line-height: 1.6; max-width: 38rem; }
-  .all { color: var(--accent); text-underline-offset: 3px; font-weight: 500; }
-  .all:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 0.4rem; }
-</style>
+        <SliderArrows />
+
+        <div class="splide__track">
+          <div class="splide__list">
+            {posts.map((p) => (
+              <div class="splide__slide">
+                <OfferCard
+                  title={p.title}
+                  text={short(p.excerpt)}
+                  image={p.image_url!}
+                  href={postUrl(p)}
+                  meta={p.days ? `${p.days} ${p.days === 1 ? "day" : "days"}` : "Itinerary"}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </Section>
+)}

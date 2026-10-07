@@ -3,19 +3,21 @@ import { Image } from "astro:assets";
 
 interface Props {
   image: string;
+  alt?: string;
+  href?: string;
 }
 
-const { image } = Astro.props;
+const { image, alt = "Travel Destination", href = "#" } = Astro.props;
 ---
 
 <article class="card card--destination">
-  <a href="#" class="card__link">
+  <a href={href} class="card__link">
     <Image
       src={image}
       width={400}
       height={600}
       class="card__image"
-      alt="Travel Destination"
+      alt={alt}
       loading="lazy"
     />
   </a>

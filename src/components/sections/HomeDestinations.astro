@@ -1,77 +1,43 @@
 ---
-// Galeri dari folder images/destinations di server (dikelola lewat CMS PHP).
-// Daftar fotonya dibaca dari manifest.json saat halaman dibuka, jadi foto baru tampil tanpa build ulang.
-const base = import.meta.env.BASE_URL;
+import Section from "@components/sections/Section.astro";
+import SliderArrows from "@components/blocks/SliderArrows.astro";
+import DestinationCard from "@components/blocks/DestinationCard.astro";
+import Heading from "@components/ui/Heading.astro";
+
+import data from "@data/destination-gallery.json"; // hanya untuk judul dan subjudul
+import { getDestinationImages } from "../../lib/home-cms";
+
+// Foto dari folder images/destinations (dikelola di CMS PHP).
+const items = await getDestinationImages();
 ---
 
-<section class="hd" data-home-gallery="destinations" data-dir={`${base}images/destinations/`} hidden aria-labelledby="dest-title">
-  <div class="wrap">
-    <h2 id="dest-title">Where would you like to go?</h2>
-    <p class="lead">Highland views, volcano craters, tea hills and city streets, all within a few hours of Bandung.</p>
-    <ul class="grid"></ul>
-  </div>
-</section>
+{items.length > 0 && (
+  <Section>
+    <div class="destination-slider">
+      <div class="splide splide--grid">
+        <div class="splide__text">
+          <Heading level="h2" decor>{data.title}</Heading>
+          <p>{data.subtitle}</p>
+        </div>
+
+        <SliderArrows />
+
+        <div class="splide__track splide__track--overfloved">
+          <div class="splide__list">
+            {items.map((item) => (
+              <div class="splide__slide">
+                <DestinationCard image={item.src} alt={item.alt} href={item.href} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </Section>
+)}
 
 <style>
-  .hd { --ink: var(--bt-ink, #18222f); --accent: var(--bt-accent, #ff7757); padding: 5rem 1.25rem; background: #fff; }
-  .hd[hidden] { display: none; }
-  .wrap { max-width: 1120px; margin: 0 auto; }
-  h2 { margin: 0; font-size: clamp(1.7rem, 3.5vw, 2.4rem); font-weight: 500; line-height: 1.2; color: var(--ink); }
-  .lead { margin: 0.5rem 0 2rem; color: var(--bt-muted, #5d6874); line-height: 1.6; max-width: 38rem; }
-  .grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-  @media (min-width: 800px) { .grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 15rem; } }
-  .grid :global(li) { position: relative; overflow: hidden; border-radius: 1rem; background: #e8edf0; aspect-ratio: 4 / 5; }
-  .grid :global(li:last-child:nth-child(odd)) { grid-column: span 2; aspect-ratio: 8 / 5; }
-  @media (min-width: 800px) {
-    .grid :global(li), .grid :global(li:last-child:nth-child(odd)) { aspect-ratio: auto; grid-column: auto; }
-    /* Tepat 8 foto mengisi 3 baris penuh: foto 1 besar, foto 6 lebar */
-    .grid.mosaic :global(li:nth-child(1)) { grid-column: span 2; grid-row: span 2; }
-    .grid.mosaic :global(li:nth-child(6)) { grid-column: span 2; }
+  .destination-slider {
+    overflow: hidden;
   }
-  .grid :global(.tile) { display: block; width: 100%; height: 100%; color: #fff; text-decoration: none; }
-  .grid :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .grid :global(.cap) {
-    position: absolute; inset: auto 0 0 0; padding: 2.5rem 1rem 0.9rem;
-    background: linear-gradient(to top, rgba(10, 16, 24, 0.75), rgba(10, 16, 24, 0));
-    font-weight: 500; font-size: 1.05rem; line-height: 1.3;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .grid :global(img) { transition: transform 0.35s ease; }
-    .grid :global(a.tile:hover img) { transform: scale(1.04); }
-  }
-  .grid :global(a.tile:focus-visible) { outline: 3px solid var(--accent); outline-offset: -3px; }
 </style>
-
-<script>
-  import { loadGallery, safePath } from "../../scripts/home-gallery";
-
-  document.querySelectorAll<HTMLElement>('[data-home-gallery="destinations"]').forEach(async (root) => {
-    const dir = root.dataset.dir!;
-    const items = await loadGallery(dir, 8);
-    if (!items.length) return;
-    const ul = root.querySelector("ul")!;
-    if (items.length === 8) ul.classList.add("mosaic");
-    for (const it of items) {
-      const li = document.createElement("li");
-      const link = safePath(it.link);
-      const tile = document.createElement(link ? "a" : "div");
-      tile.className = "tile";
-      if (link) (tile as HTMLAnchorElement).href = link;
-      const img = document.createElement("img");
-      img.src = dir + encodeURIComponent(it.file);
-      img.alt = it.alt;
-      img.loading = "lazy";
-      img.decoding = "async";
-      tile.append(img);
-      if (it.caption) {
-        const cap = document.createElement("span");
-        cap.className = "cap";
-        cap.textContent = it.caption;
-        tile.append(cap);
-      }
-      li.append(tile);
-      ul.append(li);
-    }
-    root.hidden = false;
-  });
-</script>

@@ -8,11 +8,13 @@ interface Props {
 	title: string;
 	text: string;
 	image: string;
-	rating: number;
-	price: number;
+	rating?: number;   // kosong = bintang tidak ditampilkan
+	price?: number;    // kosong = tampilkan `meta` (mis. "2 days")
+	meta?: string;
+	href?: string;     // tautan ke artikel (default "#", buka tab baru seperti semula)
 }
 
-const { title, image, text, rating, price } = Astro.props;
+const { title, image, text, rating, price, meta, href } = Astro.props;
 ---
 
 <article class="card card--offer">
@@ -28,22 +30,22 @@ const { title, image, text, rating, price } = Astro.props;
 	<div class="card__content">
 		<div class="card__heading-holder">
 			<Heading level="h4">{title}</Heading>
-			<Rating stars={rating} />
+			{rating ? <Rating stars={rating} /> : null}
 		</div>
 
 		<div class="card__description">{text}</div>
 
 		<div class="card__links">
 			<span class="card__price">
-				From <strong>€{price}</strong>
+				{price !== undefined ? <>From <strong>€{price}</strong></> : <strong>{meta}</strong>}
 			</span>
 			<Link
-				href="#"
+				href={href ?? "#"}
 				text="Details"
 				color="tertiary"
 				isButton={true}
-				target="_blank"
-				rel="noopener noreferrer"
+				target={href ? undefined : "_blank"}
+				rel={href ? undefined : "noopener noreferrer"}
 			/>
 		</div>
 	</div>
