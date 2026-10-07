@@ -66,6 +66,12 @@ const crumbs = [
   { name: cat.label, url: categoryUrl(post.category) },
   { name: post.title, url: Astro.url.pathname },
 ];
+// Foto hero + foto galeri (maks. 6 URL) untuk data terstruktur
+const images = [post.image_url, ...post.gallery.map((g) => g.url)]
+  .filter((u): u is string => !!u)
+  .filter((u, i, a) => a.indexOf(u) === i)
+  .slice(0, 6)
+  .map(abs);
 const jsonLd = [
   {
     "@context": "https://schema.org",
@@ -82,7 +88,7 @@ const jsonLd = [
     "@type": "Article",
     headline: post.title,
     description: metaDesc,
-    image: post.image_url ?? undefined,
+    image: images.length ? images : undefined,
     datePublished: isoDate(post.created_at),
     dateModified: isoDate(post.updated_at ?? post.created_at),
     mainEntityOfPage: abs(Astro.url.pathname),
@@ -125,6 +131,7 @@ const jsonLdString = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
     <FactsBox facts={post.facts} />
 
     {post.content && <article class="prose" set:html={post.content} />}
+
 
     <MapEmbed map={post.map} />
 

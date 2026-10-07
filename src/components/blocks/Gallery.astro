@@ -7,47 +7,45 @@ interface Props {
 }
 
 const { images, heading = "Photo gallery" } = Astro.props;
-
-// Mosaik menampilkan maksimal 5 foto. Sisanya hanya bisa dilihat di lightbox ("+N photos").
-const MAX_TILES = 5;
-const shown = images.slice(0, MAX_TILES);
-const rest = images.slice(MAX_TILES);
+const n = images.length;
 ---
 
-{images.length > 0 && (
+{n > 0 && (
   <section class="gallery" aria-label={heading} data-gallery>
-   <!-- <h2>{heading}</h2> -->
+    <h2 class="sr-only">{heading}</h2>
 
-    <ul class={`mosaic n${shown.length}`}>
-      {shown.map((img, i) => (
-        <li>
-          <a
-            href={img.url}
-            data-alt={img.alt}
-            data-caption={img.caption ?? ""}
-            data-credit={img.credit ?? ""}
-          >
-            <img src={img.url} alt={img.alt} loading="lazy" decoding="async" />
-            {rest.length > 0 && i === shown.length - 1 && (
-              <span class="more">+{rest.length} {rest.length === 1 ? "photo" : "photos"}</span>
-            )}
-          </a>
-        </li>
-      ))}
-    </ul>
-
-    {rest.length > 0 && (
-      <div hidden>
-        {rest.map((img) => (
-          <a
-            href={img.url}
-            data-alt={img.alt}
-            data-caption={img.caption ?? ""}
-            data-credit={img.credit ?? ""}
-          >{img.alt}</a>
+    <div class="slider">
+      <ul class="track" tabindex="0" aria-label={`${heading}, ${n} ${n === 1 ? "photo" : "photos"}`}>
+        {images.map((img, i) => (
+          <li class="slide">
+            <a
+              href={img.url}
+              data-alt={img.alt}
+              data-caption={img.caption ?? ""}
+              data-credit={img.credit ?? ""}
+              aria-label={`Open photo ${i + 1} of ${n} in full screen`}
+            >
+              <img src={img.url} alt={img.alt} loading="lazy" decoding="async" draggable="false" />
+            </a>
+            {img.caption && img.caption !== img.alt && <p class="slide-cap">{img.caption}</p>}
+          </li>
         ))}
-      </div>
-    )}
+      </ul>
+
+      {n > 1 && (
+        <div class="bar">
+          <p class="pos" aria-live="polite">1 / {n}</p>
+          <div class="nav">
+            <button class="go go-prev" type="button" aria-label="Previous photos" disabled>
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+            </button>
+            <button class="go go-next" type="button" aria-label="Next photos">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
 
     <dialog class="lightbox" aria-label="Photo viewer">
       <button class="btn close" type="button" aria-label="Close photo viewer">
@@ -75,54 +73,54 @@ const rest = images.slice(MAX_TILES);
   .gallery {
     --accent: var(--bt-accent, #ff7757);
     --ink: var(--bt-ink, #18222f);
-    max-width: 56rem;
-    margin: 3rem auto 0;
+    --muted: var(--bt-muted, #5d6874);
+    --gap: 0.75rem;
+    margin: -1.25rem 0 3rem;
   }
-  h2 { font-size: 1.7rem; font-weight: 500; line-height: 1.25; color: var(--ink); margin: 0 0 1.25rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
-  /* ---- Mosaik ---- */
-  .mosaic {
+  /* ---- Slider: semua foto adalah <img> biasa di HTML, jadi terbaca Google Images ---- */
+  .track {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 11rem;
-    gap: 0.5rem;
+    display: flex;
+    gap: var(--gap);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
   }
-  .mosaic li { position: relative; overflow: hidden; border-radius: 0.75rem; background: #e8edf0; }
-  .mosaic a { display: block; width: 100%; height: 100%; color: inherit; }
-  .mosaic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .track::-webkit-scrollbar { display: none; }
+  .track:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 0.5rem; }
+
+  .slide { flex: 0 0 86%; scroll-snap-align: start; min-width: 0; }
+  .slide a { display: block; border-radius: 0.9rem; overflow: hidden; background: #e8edf0; aspect-ratio: 4 / 3; }
+  .slide img { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; }
   @media (prefers-reduced-motion: no-preference) {
-    .mosaic img { transition: transform 0.35s ease; }
-    .mosaic a:hover img { transform: scale(1.04); }
+    .slide img { transition: transform 0.35s ease; }
+    .slide a:hover img { transform: scale(1.03); }
+    .track { scroll-behavior: smooth; }
   }
+  .slide-cap { margin: 0.5rem 0 0; font-size: 0.9rem; line-height: 1.45; color: var(--muted); }
+  .slide a:focus-visible, .go:focus-visible, .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
-  .n1 li { grid-column: span 4; grid-row: span 2; }
-  .n2 li { grid-column: span 2; grid-row: span 2; }
-  .n3 li:first-child, .n4 li:first-child, .n5 li:first-child { grid-column: span 2; grid-row: span 2; }
-  .n3 li:not(:first-child) { grid-column: span 2; }
-  .n4 li:nth-child(2) { grid-column: span 2; }
-
-  .more {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    background: rgba(24, 34, 47, 0.62);
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: 500;
+  .bar { display: flex; align-items: center; justify-content: space-between; margin-top: 0.75rem; }
+  .pos { margin: 0; font-size: 0.9rem; color: var(--muted); }
+  .nav { display: flex; gap: 0.5rem; }
+  .go {
+    display: grid; place-items: center; width: 2.6rem; height: 2.6rem; padding: 0;
+    border: 1px solid #d5dce2; border-radius: 50%; background: #fff; color: var(--ink); cursor: pointer;
   }
+  .go:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .go:disabled { opacity: 0.35; cursor: default; }
 
-  a:focus-visible, .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-
-  @media (max-width: 640px) {
-    .mosaic { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 8.5rem; }
-    .n1 li, .n3 li:not(:first-child), .n4 li:nth-child(2) { grid-column: span 1; grid-row: span 1; }
-    .n1 li, .n3 li:first-child, .n4 li:first-child, .n5 li:first-child { grid-column: span 2; grid-row: span 2; }
-    .n2 li { grid-column: span 1; grid-row: span 2; }
-    .n4 li:last-child { grid-column: span 2; }
+  @media (min-width: 700px) {
+    .slide { flex-basis: calc((100% - var(--gap)) / 2); }
+  }
+  @media (min-width: 1000px) {
+    .slide { flex-basis: calc((100% - 2 * var(--gap)) / 3); }
   }
 
   /* ---- Lightbox ---- */
@@ -176,10 +174,40 @@ const rest = images.slice(MAX_TILES);
 
 <script>
   document.querySelectorAll<HTMLElement>("[data-gallery]").forEach((root) => {
+    const track = root.querySelector<HTMLElement>(".track");
+    const slides = Array.from(root.querySelectorAll<HTMLElement>(".slide"));
     const links = Array.from(root.querySelectorAll<HTMLAnchorElement>("a[data-alt]"));
     const dlg = root.querySelector<HTMLDialogElement>("dialog");
-    if (!dlg || links.length === 0) return;
+    if (!track || !dlg || links.length === 0) return;
 
+    // ---------- slider ----------
+    const prevBtn = root.querySelector<HTMLButtonElement>(".go-prev");
+    const nextBtn = root.querySelector<HTMLButtonElement>(".go-next");
+    const pos = root.querySelector<HTMLElement>(".pos");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const step = () => (slides.length > 1 ? slides[1].offsetLeft - slides[0].offsetLeft : track.clientWidth);
+
+    const update = () => {
+      if (!pos) return;
+      const s = step() || 1;
+      const visible = Math.max(1, Math.floor((track.clientWidth + 0.1 * s) / s + 0.05));
+      const atStart = track.scrollLeft <= 2;
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+      let first = atEnd ? slides.length - visible : Math.round(track.scrollLeft / s);
+      first = Math.max(0, Math.min(first, slides.length - 1));
+      const last = Math.min(slides.length, first + visible);
+      pos.textContent = visible > 1 ? `${first + 1}\u2013${last} / ${slides.length}` : `${first + 1} / ${slides.length}`;
+      if (prevBtn) prevBtn.disabled = atStart;
+      if (nextBtn) nextBtn.disabled = atEnd;
+    };
+    const go = (dir: number) => track.scrollBy({ left: dir * step(), behavior: reduce ? "auto" : "smooth" });
+    prevBtn?.addEventListener("click", () => go(-1));
+    nextBtn?.addEventListener("click", () => go(1));
+    track.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+    window.addEventListener("resize", update);
+    update();
+
+    // ---------- lightbox ----------
     const img = dlg.querySelector<HTMLImageElement>("figure img")!;
     const cap = dlg.querySelector<HTMLElement>(".cap")!;
     const credit = dlg.querySelector<HTMLElement>(".credit")!;
@@ -195,7 +223,6 @@ const rest = images.slice(MAX_TILES);
       cap.textContent = a.dataset.caption ?? "";
       credit.textContent = a.dataset.credit ? `Photo: ${a.dataset.credit}` : "";
       count.textContent = `${index + 1} / ${links.length}`;
-      // muat foto sebelah supaya perpindahan terasa cepat
       [index + 1, index - 1].forEach((m) => {
         const pre = new Image();
         pre.src = links[(m + links.length) % links.length].href;
@@ -214,12 +241,15 @@ const rest = images.slice(MAX_TILES);
     dlg.querySelector(".prev")?.addEventListener("click", () => show(index - 1));
     dlg.querySelector(".next")?.addEventListener("click", () => show(index + 1));
     dlg.querySelector(".close")?.addEventListener("click", () => dlg.close());
-    // klik di area kosong (bukan foto/tombol) menutup
     dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
     dlg.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft") show(index - 1);
       if (e.key === "ArrowRight") show(index + 1);
     });
-    dlg.addEventListener("close", () => { document.body.style.overflow = ""; });
+    dlg.addEventListener("close", () => {
+      document.body.style.overflow = "";
+      // geser slider ke foto terakhir yang dilihat di lightbox
+      slides[index]?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "auto" });
+    });
   });
 </script>

@@ -25,12 +25,26 @@ jobs:
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_DATABASE_ID: ${{ secrets.CF_DATABASE_ID }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-      - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          local-dir: ./dist/
-          server-dir: ./
-          timeout: 120000
-          protocol: ftps
+      - name: Deploy ke Hostinger (rsync over SSH)
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_REMOTE_PATH: ${{ secrets.SSH_REMOTE_PATH }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+
+          for attempt in 1 2 3; do
+            echo "Percobaan $attempt"
+            if rsync -rlvzc --partial --delay-updates --timeout=90 \
+                 -e "ssh -p $SSH_PORT -i ~/.ssh/id_ed25519 -o ServerAliveInterval=15 -o ConnectTimeout=30" \
+                 dist/ "$SSH_USER@$SSH_HOST:$SSH_REMOTE_PATH"; then
+              echo "Deploy selesai"; exit 0
+            fi
+            echo "Gagal, coba lagi 20 detik lagi"; sleep 20
+          done
+          echo "Deploy gagal 3 kali"; exit 1  

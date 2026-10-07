@@ -11,6 +11,7 @@ import {
   DESTINATIONS,
   isDestinationGuide,
   categoryUrl,
+  isoDate,
   type CategoryKey,
   type DestinationKey,
 } from "../../lib/posts";
@@ -35,6 +36,28 @@ const sections = order
     posts: all.filter((p) => p.destination === key && p.category === c && !isDestinationGuide(p)),
   }))
   .filter((s) => s.posts.length > 0);
+
+// Data terstruktur: hero + foto galeri (maks. 6 URL)
+const abs = (path: string) => (Astro.site ? new URL(path, Astro.site).href : path);
+const images = guide
+  ? [guide.image_url, ...guide.gallery.map((g) => g.url)]
+      .filter((u): u is string => !!u)
+      .filter((u, i, a) => a.indexOf(u) === i)
+      .slice(0, 6)
+      .map(abs)
+  : [];
+const jsonLdString = guide
+  ? JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: guide.title,
+      description: guide.meta_desc || guide.excerpt || undefined,
+      image: images.length ? images : undefined,
+      datePublished: isoDate(guide.created_at),
+      dateModified: isoDate(guide.updated_at ?? guide.created_at),
+      mainEntityOfPage: abs(Astro.url.pathname),
+    }).replace(/</g, "\\u003c")
+  : "";
 ---
 
 <Layout
@@ -63,6 +86,7 @@ const sections = order
     )}
 
     {guide && <Gallery images={guide.gallery} />}
+
     {guide && <FactsBox facts={guide.facts} />}
     {guide?.content && <article class="prose" set:html={guide.content} />}
     {guide && <MapEmbed map={guide.map} />}
@@ -79,6 +103,8 @@ const sections = order
       <p class="empty">Our {dest.label} guide is on the way.</p>
     )}
   </main>
+
+  {jsonLdString && <script type="application/ld+json" set:html={jsonLdString} />}
 </Layout>
 
 <style>
