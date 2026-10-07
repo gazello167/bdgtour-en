@@ -1,0 +1,31 @@
+---
+import PostGrid from "../blocks/PostGrid.astro";
+import { getAllPosts, categoryUrl } from "../../lib/posts";
+
+// Artikel kategori Destinations yang dicentang "Popular" di CMS PHP.
+const MAX = 6;
+const posts = (await getAllPosts())
+  .filter((p) => p.category === "destinations" && p.popular)
+  .slice(0, MAX); // getAllPosts sudah urut terbaru dulu
+---
+
+{posts.length > 0 && (
+  <section class="home-sec" aria-labelledby="popular-title">
+    <div class="wrap">
+      <header class="head">
+        <h2 id="popular-title">Popular destinations around Bandung</h2>
+        <a class="all" href={categoryUrl("destinations")}>All destinations</a>
+      </header>
+      <PostGrid posts={posts} showCategory={false} />
+    </div>
+  </section>
+)}
+
+<style>
+  .home-sec { --ink: var(--bt-ink, #18222f); --accent: var(--bt-accent, #ff7757); padding: 5rem 1.25rem; background: #fff; }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+  .head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1.5rem; margin-bottom: 2rem; }
+  h2 { margin: 0; font-size: clamp(1.7rem, 3.5vw, 2.4rem); font-weight: 500; line-height: 1.2; color: var(--ink); }
+  .all { color: var(--accent); text-underline-offset: 3px; font-weight: 500; }
+  .all:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 0.4rem; }
+</style>

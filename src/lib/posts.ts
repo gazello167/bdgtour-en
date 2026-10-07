@@ -98,6 +98,8 @@ export interface Post {
   items: Item[];
   gallery: GalleryImage[];
   map: PlaceMap | null;
+  popular: boolean;   // ditandai di CMS PHP, tampil di home (kategori destinations)
+  featured: boolean;  // ditandai di CMS PHP, tampil di home (kategori itineraries)
 }
 
 // ---------------------------------------------------------------------------
@@ -160,6 +162,8 @@ export function getAllPosts(): Promise<Post[]> {
             items: parseList<Item>(r.items),
             gallery: parseGallery(r.gallery, r.title),
             map: parseMap(r.map),
+            popular: Number(r.popular) === 1,
+            featured: Number(r.featured) === 1,
           }) as Post
       )
   );
