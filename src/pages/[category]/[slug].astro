@@ -5,6 +5,12 @@ import FactsBox from "../../components/blocks/FactsBox.astro";
 import ItemList from "../../components/blocks/ItemList.astro";
 import Gallery from "../../components/blocks/Gallery.astro";
 import MapEmbed from "../../components/blocks/MapEmbed.astro";
+import ProductSummary from "../../components/product/ProductSummary.astro";
+import ItineraryTimeline from "../../components/product/ItineraryTimeline.astro";
+import PriceTable from "../../components/product/PriceTable.astro";
+import IncludesBox from "../../components/product/IncludesBox.astro";
+import TripHighlights from "../../components/product/TripHighlights.astro";
+import { priceRange } from "../../lib/product";
 import {
   getAllPosts,
   CATEGORIES,
@@ -73,6 +79,8 @@ const images = [post.image_url, ...post.gallery.map((g) => g.url)]
   .filter((u, i, a) => a.indexOf(u) === i)
   .slice(0, 6)
   .map(abs);
+const product = post.product;
+const range = product ? priceRange(product) : null;
 const jsonLd = [
   {
     "@context": "https://schema.org",
@@ -84,16 +92,50 @@ const jsonLd = [
       item: abs(c.url),
     })),
   },
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.title,
-    description: metaDesc,
-    image: images.length ? images : undefined,
-    datePublished: isoDate(post.created_at),
-    dateModified: isoDate(post.updated_at ?? post.created_at),
-    mainEntityOfPage: abs(Astro.url.pathname),
-  },
+  product
+    ? {
+        "@context": "https://schema.org",
+        "@type": "TouristTrip",
+        name: post.title,
+        description: metaDesc,
+        image: images.length ? images : undefined,
+        url: abs(Astro.url.pathname),
+        touristType: "Groups and families",
+        provider: { "@type": "TravelAgency", name: "Bandung Travel Guide", url: abs(base) },
+        offers: range
+          ? {
+              "@type": "AggregateOffer",
+              priceCurrency: "IDR",
+              lowPrice: range.low.price,
+              highPrice: range.high.price,
+              offerCount: product.price_table?.rows.length,
+              availability: "https://schema.org/InStock",
+              url: abs(Astro.url.pathname),
+            }
+          : undefined,
+        itinerary: product.days.length
+          ? {
+              "@type": "ItemList",
+              numberOfItems: product.days.length,
+              itemListElement: product.days.map((d, i) => ({
+                "@type": "ListItem",
+                position: i + 1,
+                name: `Day ${d.day}${d.title ? `: ${d.title}` : ""}`,
+                description: d.steps.map((s) => s.text.replace(/\*\*/g, "")).join(". "),
+              })),
+            }
+          : undefined,
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: post.title,
+        description: metaDesc,
+        image: images.length ? images : undefined,
+        datePublished: isoDate(post.created_at),
+        dateModified: isoDate(post.updated_at ?? post.created_at),
+        mainEntityOfPage: abs(Astro.url.pathname),
+      },
 ];
 const jsonLdString = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
 ---
@@ -129,14 +171,29 @@ const jsonLdString = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
 
     <Gallery images={post.gallery} />
 
-    <FactsBox facts={post.facts} />
-
-    {post.content && <article class="prose" set:html={post.content} />}
-
-
-    <MapEmbed map={post.map} />
-
-    <ItemList items={post.items} heading={itemsHeading[post.category]} />
+    {product ? (
+      <div class="product">
+        <div class="product-main">
+          {post.content && <article class="prose" set:html={post.content} />}
+          <ItineraryTimeline days={product.days} />
+          {product.price_table && <PriceTable table={product.price_table} />}
+          <IncludesBox includes={product.includes} excludes={product.excludes} />
+          <TripHighlights highlights={product.highlights} fleet={product.fleet} note={product.note} />
+          <MapEmbed map={post.map} />
+          <ItemList items={post.items} heading={itemsHeading[post.category]} />
+        </div>
+        <aside class="product-side" aria-label="Trip summary">
+          <ProductSummary product={product} days={post.days} />
+        </aside>
+      </div>
+    ) : (
+      <>
+        <FactsBox facts={post.facts} />
+        {post.content && <article class="prose" set:html={post.content} />}
+        <MapEmbed map={post.map} />
+        <ItemList items={post.items} heading={itemsHeading[post.category]} />
+      </>
+    )}
 
     <aside class="cta">
       <h2>Planning a trip to Bandung?</h2>
@@ -186,6 +243,15 @@ const jsonLdString = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
   .prose :global(li) { margin-bottom: 0.4rem; }
   .prose :global(img) { display: block; max-width: 100%; height: auto; border-radius: 1rem; margin: 2rem 0; }
   .prose :global(blockquote) { margin: 2rem 0; padding: 0.25rem 0 0.25rem 1.25rem; border-left: 4px solid var(--accent); color: var(--ink); font-size: 1.2rem; }
+
+  .product { display: grid; gap: 32px; align-items: start; }
+  .product-main { min-width: 0; }
+  .product-main .prose { max-width: none; margin: 0 0 48px; }
+  .product-side { order: -1; }
+  @media (min-width: 960px) {
+    .product { grid-template-columns: minmax(0, 1fr) 320px; gap: 48px; }
+    .product-side { order: 0; position: sticky; top: 104px; }
+  }
 
   .cta { max-width: 42rem; margin: 3.5rem auto 0; padding: 2rem; border-radius: 1.25rem; background: var(--ink); color: #fff; }
   .cta h2 { font-size: 1.5rem; font-weight: 500; color: #fff; margin: 0 0 0.5rem; }

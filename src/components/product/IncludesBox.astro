@@ -1,0 +1,37 @@
+---
+interface Props { includes: string[]; excludes: string[]; }
+const { includes, excludes } = Astro.props;
+---
+{(includes.length > 0 || excludes.length > 0) && (
+  <section id="included" class="inc" aria-labelledby="inc-h">
+    <h2 id="inc-h">What's included</h2>
+    <div class="cols">
+      {includes.length > 0 && (
+        <div class="col yes">
+          <h3>Included</h3>
+          <ul>{includes.map((i) => <li>{i}</li>)}</ul>
+        </div>
+      )}
+      {excludes.length > 0 && (
+        <div class="col no">
+          <h3>Not included</h3>
+          <ul>{excludes.map((i) => <li>{i}</li>)}</ul>
+        </div>
+      )}
+    </div>
+  </section>
+)}
+<style>
+  .inc { scroll-margin-top: 96px; margin-bottom: 48px; }
+  h2 { font-size: 27.2px !important; font-weight: 500; color: var(--ink); margin: 0 0 20px; }
+  .cols { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(256px, 1fr)); }
+  .col { border-radius: 16px; padding: 20px 20px 16px; border: 1px solid #e3e8ec; background: #fff; }
+  h3 { margin: 0 0 12px; font-size: 16.8px !important; font-weight: 600; color: var(--ink); }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8.8px; }
+  li { position: relative; padding-left: 25.6px; line-height: 1.5; color: #2b3644; }
+  li::before { position: absolute; left: 0; top: 0; font-weight: 700; }
+  .yes { background: #f3faf6; border-color: #cfe8d9; }
+  .yes li::before { content: "✓"; color: #1d8a4e; }
+  .no { background: #fdf5f4; border-color: #f1d4cf; }
+  .no li::before { content: "✕"; color: #c4452f; }
+</style>

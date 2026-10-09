@@ -1,0 +1,48 @@
+---
+import { inline, type ItineraryDay } from "../../lib/product";
+interface Props { days: ItineraryDay[]; }
+const { days } = Astro.props;
+---
+{days.length > 0 && (
+  <section id="itinerary" class="itn" aria-labelledby="itn-h">
+    <h2 id="itn-h">Itinerary</h2>
+    <ol class="timeline">
+      {days.map((d) => (
+        <li class="day">
+          <span class="badge">Day {d.day}</span>
+          {d.title && <h3>{d.title}</h3>}
+          <ul class="steps">
+            {d.steps.map((s) => (
+              <li>
+                <span set:html={inline(s.text)} />
+                {s.pick && (
+                  <div class="pick">
+                    <p class="pick-title">{s.pick.title || "Choose from:"}</p>
+                    <ul class="pick-grid">
+                      {s.pick.options.map((o) => <li>{o}</li>)}
+                    </ul>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ol>
+  </section>
+)}
+<style>
+  .itn { scroll-margin-top: 96px; margin-bottom: 48px; }
+  h2 { font-size: 27.2px !important; font-weight: 500; color: var(--ink); margin: 0 0 24px; }
+  .timeline { list-style: none; margin: 0; padding: 0 0 0 20px; border-left: 2px solid #dfe6ea; display: grid; gap: 24px; }
+  .day { position: relative; background: #fff; border: 1px solid #e3e8ec; border-radius: 16px; padding: 20px 20px 17.6px; }
+  .day::before { content: ""; position: absolute; left: calc(-20px - 7px); top: 25.6px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px #fff; }
+  .badge { display: inline-block; font-size: 12.8px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; background: var(--accent); color: #fff; padding: 4px 12px; border-radius: 999px; margin-bottom: 12px; }
+  h3 { font-size: 18.4px !important; font-weight: 500; margin: 0 0 9.6px; color: var(--ink); }
+  .steps { margin: 0; padding-left: 19.2px; line-height: 1.65; color: #2b3644; }
+  .steps > li { margin-bottom: 8px; }
+  .pick { margin-top: 9.6px; padding: 14.4px 16px; border-radius: 12.8px; background: #f6f8f9; border: 1px dashed #c9d4da; }
+  .pick-title { margin: 0 0 9.6px; font-weight: 600; font-size: 14.4px; color: var(--ink); }
+  .pick-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 6.4px; }
+  .pick-grid li { background: #fff; border: 1px solid #e3e8ec; border-radius: 8px; padding: 6.4px 10.4px; font-size: 14.4px; }
+</style>

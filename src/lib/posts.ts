@@ -1,4 +1,5 @@
 import { queryD1 } from "./d1";
+import { parseProduct, type Product } from "./product";
 
 // ---------------------------------------------------------------------------
 // Struktur situs. Ubah teks "intro" sesuka hati; key (kiri) jangan diubah
@@ -100,6 +101,7 @@ export interface Post {
   map: PlaceMap | null;
   popular: boolean;   // ditandai di CMS PHP, tampil di home (kategori destinations)
   featured: boolean;  // ditandai di CMS PHP, tampil di home (kategori itineraries)
+  product: Product | null; // paket tour: tabel harga + itinerary (kolom JSON `product`)
 }
 
 // ---------------------------------------------------------------------------
@@ -164,6 +166,7 @@ export function getAllPosts(): Promise<Post[]> {
             map: parseMap(r.map),
             popular: Number(r.popular) === 1,
             featured: Number(r.featured) === 1,
+            product: parseProduct(r.product),
           }) as Post
       )
   );

@@ -1,0 +1,45 @@
+---
+import { priceRange, rp, type Product } from "../../lib/product";
+interface Props { product: Product; days?: number | null; }
+const { product, days } = Astro.props;
+const range = priceRange(product);
+const duration = product.duration || (days ? `${days} days` : "");
+const links = [
+  product.days.length ? { href: "#itinerary", label: "Itinerary" } : null,
+  product.price_table ? { href: "#prices", label: "Prices" } : null,
+  product.includes.length || product.excludes.length ? { href: "#included", label: "What's included" } : null,
+].filter(Boolean) as { href: string; label: string }[];
+---
+<div class="summary">
+  {range && (
+    <p class="from">
+      <span>From</span>
+      <strong>{rp(range.low.price)}</strong>
+      <span>per person · {range.low.pax} travellers, {range.low.vehicle}</span>
+    </p>
+  )}
+  <dl>
+    {duration && (<><dt>Duration</dt><dd>{duration}</dd></>)}
+    {product.price_table && (<><dt>Group size</dt><dd>{product.price_table.rows[0].pax}+ travellers</dd></>)}
+    {product.price_table?.hotel && (<><dt>Hotel</dt><dd>{product.price_table.hotel}</dd></>)}
+  </dl>
+  {product.cta && <a class="btn" href={product.cta.url} rel="noopener">{product.cta.label}</a>}
+  {links.length > 0 && (
+    <nav aria-label="On this page">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+  )}
+</div>
+<style>
+  .summary { border: 1px solid #e3e8ec; border-radius: 20px; padding: 24px; background: #fff; box-shadow: 0 10px 30px -18px rgba(24,34,47,.35); }
+  .from { margin: 0 0 16px; display: grid; gap: 2.4px; color: var(--muted); font-size: 14.4px; }
+  .from strong { font-size: 30.4px; font-weight: 600; color: var(--ink); line-height: 1.1; }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 0 0 20px; font-size: 15.2px; }
+  dt { color: var(--muted); }
+  dd { margin: 0; color: var(--ink); font-weight: 500; text-align: right; }
+  .btn { display: block; text-align: center; padding: 13.6px 16px; border-radius: 9.6px; background: var(--accent); color: #fff; font-weight: 500; text-decoration: none; margin-bottom: 16px; }
+  .btn:hover { filter: brightness(1.08); }
+  nav { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 16px; border-top: 1px solid #e3e8ec; }
+  nav a { font-size: 13.6px; padding: 4.8px 12px; border-radius: 999px; background: #f2f5f7; color: var(--ink); text-decoration: none; }
+  nav a:hover { background: var(--accent); color: #fff; }
+</style>
