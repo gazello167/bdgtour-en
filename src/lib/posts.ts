@@ -49,6 +49,18 @@ export const DESTINATIONS = {
     label: "Bandung City",
     intro: "Food, cafes, shopping streets and colonial-era architecture.",
   },
+  pangandaran: {
+    label: "Pangandaran",
+    intro: "White sand beaches, coastal water sports, and the lush wildlife of Pangandaran Nature Reserve.",
+  },
+  garut: {
+    label: "Garut",
+    intro: "Volcanic craters, natural hot springs, and scenic tea gardens surrounded by majestic mountains.",
+  },
+  "puncak-bogor": {
+    label: "Puncak Bogor",
+    intro: "Refreshing mountain air, expansive tea plantations, and popular family attractions in the highlands.",
+  },
 } as const;
 
 export type CategoryKey = keyof typeof CATEGORIES;
