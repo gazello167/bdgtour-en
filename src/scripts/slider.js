@@ -104,17 +104,19 @@ const sliders = {
       type: "loop",
       perPage: 5,
       perMove: 1,
-      gap: "1.6rem",
+      gap: "1.3rem",
       trimSpace: false,
-      pagination: false,
+      pagination: true,
       breakpoints: {
         1023: {
           perPage: 4,
-          gap: "1.2rem"
+          arrows: true,
+          gap: "1rem"
         },
         767: {
           perPage: 3,
           gap: "0.3rem",
+          arrows: false,
           pagination: true
         }
       }
