@@ -1,21 +1,104 @@
 ---
-import Heading from "@components/ui/Heading.astro"
+import Heading from "@components/ui/Heading.astro";
+
+// Endpoint PHP di Hostinger (folder public_html/en/newsletter). Tanpa JavaScript, form tetap bisa dikirim biasa.
+const endpoint = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}newsletter/`;
 ---
-<form class="subscribe-form" action="/">
+
+<form class="subscribe-form" action={endpoint} method="post">
   <Heading level="h2">Our Newsletter</Heading>
 
+  <div class="subscribe-form__body">
   <div class="subscribe-form__inner">
     <label for="subscribe-email">
       <span>Email</span>
       <input
         type="email"
         id="subscribe-email"
-        name="subscribe-email"
+        name="email"
         placeholder="Enter your email"
+        autocomplete="email"
+        maxlength="254"
         required
       />
     </label>
 
+    <!-- Perangkap bot: manusia tidak melihat dan tidak mengisinya -->
+    <div class="subscribe-form__hp" aria-hidden="true">
+      <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
     <button class="button button-tertiary" type="submit">Subscribe</button>
   </div>
+
+  <p class="subscribe-form__note">We only send travel tips and offers. Unsubscribe anytime.</p>
+  <p class="subscribe-form__msg" role="status" aria-live="polite" hidden></p>
+  </div>
 </form>
+
+<style>
+  .subscribe-form__body {
+    display: flex;
+    flex-direction: column;
+  }
+  @media screen and (max-width: 1150px) {
+    .subscribe-form__body {
+      width: 100%;
+    }
+  }
+  .subscribe-form__hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .subscribe-form__note {
+    margin: 1.2rem 0 0;
+    font-size: 1.4rem;
+    opacity: 0.8;
+  }
+  .subscribe-form__msg {
+    margin: 1.2rem 0 0;
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+  .subscribe-form__msg.is-error {
+    color: #c0392b;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>(".subscribe-form").forEach((form) => {
+    const msg = form.querySelector<HTMLElement>(".subscribe-form__msg")!;
+    const btn = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      const label = btn.textContent;
+      btn.textContent = "Sending...";
+      msg.hidden = true;
+      msg.classList.remove("is-error");
+
+      try {
+        const res = await fetch(form.action, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+        const data = await res.json().catch(() => null);
+        msg.textContent = data?.message ?? "Sorry, something went wrong. Please try again.";
+        msg.classList.toggle("is-error", !res.ok);
+        if (res.ok) form.querySelector<HTMLInputElement>("input[type=email]")!.value = "";
+      } catch {
+        msg.textContent = "Network error. Please check your connection and try again.";
+        msg.classList.add("is-error");
+      } finally {
+        msg.hidden = false;
+        btn.disabled = false;
+        btn.textContent = label;
+      }
+    });
+  });
+</script>

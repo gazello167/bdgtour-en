@@ -1,8 +1,15 @@
 ---
 import { Icon } from "astro-icon/components";
+
+const WA_NUMBER = "628112220194"; // +62 811-2220-194, tanpa tanda + dan spasi
 ---
 
-<form class="search-form" action="/">
+<form
+  class="search-form"
+  action={`https://wa.me/${WA_NUMBER}`}
+  target="_blank"
+  data-wa={WA_NUMBER}
+>
   <div class="search-form__inner">
 
     <label class="search-form__label" for="destination">
@@ -37,7 +44,7 @@ import { Icon } from "astro-icon/components";
     </label>
 
     <label class="search-form__label" for="check-out">
-      Check In
+      Check Out
       <input
         class="search-form__input"
         type="date"
@@ -52,3 +59,46 @@ import { Icon } from "astro-icon/components";
     <Icon name="material-symbols:arrow-right-alt-rounded" />
   </button>
 </form>
+
+<script>
+  // Book now: buka WhatsApp (tab baru) dengan pesan dari isi form
+  const fmt = (iso: string) =>
+    iso
+      ? new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", {
+          day: "numeric", month: "short", year: "numeric", timeZone: "UTC",
+        })
+      : "";
+
+  document.querySelectorAll<HTMLFormElement>(".search-form").forEach((form) => {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const get = (name: string) =>
+        (form.elements.namedItem(name) as HTMLInputElement | null)?.value.trim() ?? "";
+
+      const destination = get("search-destination");
+      const person = get("search-person");
+      const checkIn = get("search-check-in");
+      const checkOut = get("search-check-out");
+
+      // Tanggal check out tidak boleh sebelum check in
+      const outEl = form.elements.namedItem("search-check-out") as HTMLInputElement;
+      outEl.setCustomValidity(checkIn && checkOut && checkOut < checkIn ? "Check out must be after check in" : "");
+      if (!form.reportValidity()) return;
+
+      const lines = [
+        "Hello Bandung Travel Guide, I would like to book a trip.",
+        "",
+        `Destination: ${destination || "-"}`,
+        `Number of people: ${person || "-"}`,
+        `Check in: ${fmt(checkIn) || "-"}`,
+        `Check out: ${fmt(checkOut) || "-"}`,
+        "",
+        "Could you please send me the details and prices? Thank you.",
+      ];
+
+      const url = `https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(lines.join("\n"))}`;
+      window.open(url, "_blank", "noopener");
+    });
+  });
+</script>
