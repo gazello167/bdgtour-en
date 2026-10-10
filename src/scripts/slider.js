@@ -102,15 +102,19 @@ const sliders = {
     "element": "destination-slider",
     "options": {
       type: "loop",
-      perPage: 4,
+      perPage: 5,
       perMove: 1,
-      gap: "3.2rem",
+      gap: "1.6rem",
       trimSpace: false,
       pagination: false,
       breakpoints: {
         1023: {
-          perPage: 1,
-          arrows: false,
+          perPage: 4,
+          gap: "1.2rem"
+        },
+        767: {
+          perPage: 3,
+          gap: "0.3rem",
           pagination: true
         }
       }
