@@ -1,0 +1,27 @@
+---
+import { Image } from "astro:assets";
+import Heading from "@components/ui/Heading.astro";
+
+interface Props {
+  title: string;
+  text: string;
+  image: string;
+  href: string;
+  count?: number;   // jumlah artikel di destinasi ini
+  alt?: string;
+}
+
+const { title, text, image, href, count = 0, alt = title } = Astro.props;
+---
+
+<article class="card card--travel card--pick">
+  <a href={href} class="card__link">
+    <Image src={image} width={300} height={500} class="card__image" alt={alt} loading="lazy" />
+
+    <div class="card__content">
+      <Heading level="h4">{title}</Heading>
+      <p class="card__description">{text}</p>
+      {count > 0 && <span class="card__count">{count} {count === 1 ? "destination" : "destinations"}</span>}
+    </div>
+  </a>
+</article>

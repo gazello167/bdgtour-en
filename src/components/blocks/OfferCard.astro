@@ -37,7 +37,7 @@ const { title, image, text, rating, price, meta, href } = Astro.props;
 
 		<div class="card__links">
 			<span class="card__price">
-				{price !== undefined ? <>From <strong>€{price}</strong></> : <strong>{meta}</strong>}
+				{price !== undefined ? <>From <strong>${price}</strong></> : <strong>{meta}</strong>}
 			</span>
 			<Link
 				href={href ?? "#"}

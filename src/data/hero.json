@@ -3,20 +3,24 @@
   "subtitle": "The best travel for your jouney begins now",
   "slider": [
     {
-      "image": "/en/images/Hero 1.webp",
-      "alt": "Image 1 alt"
+      "image": "/en/images/kawah-putih-ciwidey-hero.webp",
+      "alt": "Kawah Putih Ciwidey"
     },
     {
-      "image": "/en/images/Hero 2.webp",
-      "alt": "Image 2 alt"
+      "image": "/en/images/papandayan-mount-garut-hero.webp",
+      "alt": "Papandayan Volcano Garut"
     },
     {
-      "image": "/en/images/Hero 3.webp",
-      "alt": "Image 3 alt"
+      "image": "/en/images/tangkuban-perahu-lembang-hero.webp",
+      "alt": "Tangkuban Perahu Lembang"
     },
     {
-      "image": "/en/images/Hero 4.webp",
-      "alt": "Image 4 alt"
+      "image": "/en/images/bandung-city-hero.webp",
+      "alt": "Bandung City Hero"
+    },
+    {
+      "image": "/en/images/pangandaran-beach-hero.webp",
+      "alt": "Pangandaran Beach Hero"
     }
   ]
 }

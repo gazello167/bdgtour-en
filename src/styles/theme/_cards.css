@@ -11,7 +11,7 @@
 
       @media screen and (max-width: 1023px) {
         max-width: unset;
-        height: 45.6rem;
+        height: 34rem;
       }
 
       .card__image {
@@ -45,7 +45,93 @@
         flex-shrink: 0;
         }
       }
+      /* Mobile: 2 kolom, kartu lebih pendek dan teks lebih kecil */
+      @media screen and (max-width: 767px) {
+        height: 24rem;
+        border-radius: 1.8rem;
+
+        .card__link {
+          padding: 1.4rem 1.2rem;
+        }
+
+        .heading {
+          font-size: 1.7rem;
+          line-height: 1.25;
+        }
+
+        .card__description {
+          gap: 0.6rem;
+          font-size: 1.3rem;
+
+          svg {
+            width: 1.4rem;
+            height: 1.4rem;
+          }
+        }
+      }
   	}
+
+      	/* Kartu "Choose a destination": 7 kolom desktop, 3 kolom mobile */
+  	&.card--travel.card--pick {
+      height: 25rem;
+      max-width: unset;
+      border-radius: 1.8rem;
+
+      .card__link {
+        padding: 1.4rem 1.2rem;
+      }
+
+      .heading {
+        margin-bottom: 0.6rem;
+        font-size: 2.2rem;
+        line-height: 1.2;
+      }
+
+      .card__description {
+        display: -webkit-box;
+        margin: 0;
+        font-size: 1.5rem;
+        line-height: 1.35;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .card__count {
+        display: block;
+        margin-top: 0.8rem;
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: var(--tertiary-color);
+      }
+
+      @media screen and (max-width: 1023px) {
+        height: 25rem;
+      }
+
+      @media screen and (max-width: 767px) {
+        height: 16rem;
+        border-radius: 1.4rem;
+
+        .card__link {
+          padding: 1rem 0.8rem;
+        }
+
+        .heading {
+          font-size: 1.6rem;
+        }
+
+        .card__description {
+          font-size: 1.1rem;
+          -webkit-line-clamp: 4;
+        }
+
+        .card__count {
+          margin-top: 0.5rem;
+          font-size: 1.1rem;
+        }
+      }
+    }
 
   	&.card--offer {
       display: flex;
@@ -56,7 +142,7 @@
       .card__image {
         display: block;
         width: 100%;
-        height: 28.6rem;
+        height: 32rem;
         object-fit: cover;
       }
 
@@ -78,6 +164,55 @@
       .card__description {
         color: var(--text-color);
         line-height: 1.33;
+      }
+
+      /* Mobile: 2 kolom, kartu lebih pendek dan teks lebih kecil */
+      @media screen and (max-width: 767px) {
+        height: 33rem;
+        border-radius: 1.8rem;
+        .card__image {
+          height: 15rem;
+        }
+        .card__content {
+          padding: 1rem 1rem;
+          gap: 1.2rem;
+        
+        .heading {
+          font-size: 1.6rem;
+          line-height: 1.25;
+          font-weight: 600;
+         }
+        }
+
+        .card__description {
+          gap: 0.6rem;
+          font-size: 1.3rem;
+        }
+        .card__links {
+          flex-wrap: nowrap;
+          gap: 0.8rem 1rem;
+        }
+     
+        .card__price {
+          display: grid;
+          align-items: center;
+          gap: .3rem;
+          color: var(--primary-color);
+          font-size: 1.2rem;
+
+         strong {
+          color: var(--tertiary-color);
+          font-size: 2rem;
+          font-weight: 400;
+         }      
+        } 
+
+        .card__links .button {
+          padding: 0.8rem 1.4rem !important;
+          font-size: 1.4rem;
+          border-radius: 0.8rem;
+        }
+        
       }
     }
 
@@ -163,8 +298,8 @@
 
     strong {
       color: var(--tertiary-color);
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 400;
-    }
-  }
+    }      
+  }  
 }

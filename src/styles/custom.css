@@ -82,7 +82,8 @@ body .header__logo img:last-child {
 .button-submit { font-size: 1.6em !important; }
 .subscribe-form h2  { font-size: 3em !important; }
 @media screen and (max-width: 767px) {
-   .section { padding: 30px !important; }
+   .section { padding: 15px !important; }
+   .splide--grid{ gap: 3rem 2rem; }
    .heading--decor { font-size: 2.4em !important; }
    .subscribe-form h2  { font-size: 2em !important; }
 }

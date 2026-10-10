@@ -1,0 +1,42 @@
+---
+import Section from "@components/sections/Section.astro";
+import DestinationPickCard from "@components/blocks/DestinationPickCard.astro";
+import Heading from "@components/ui/Heading.astro";
+import images from "@data/destination-images.json";
+import { getAllPosts, DESTINATIONS, destinationUrl, isDestinationGuide, type DestinationKey } from "../../lib/posts";
+
+// Satu kartu per destinasi di DESTINATIONS (urutan sama dengan posts.ts).
+// Foto statis dari src/data/destination-images.json (ganti file fotonya di public/images/...).
+// Jumlah artikel dihitung seperti di halaman Destinations (panduan utama tidak ikut dihitung).
+const all = await getAllPosts();
+const items = (Object.keys(DESTINATIONS) as DestinationKey[]).map((key) => ({
+  key,
+  label: DESTINATIONS[key].label,
+  intro: DESTINATIONS[key].intro,
+  image: (images as Record<string, string>)[key],
+  count: all.filter((p) => p.destination === key && !isDestinationGuide(p)).length,
+})).filter((d) => d.image);
+---
+
+{items.length > 0 && (
+  <Section>
+    <div class="pick-slider">
+      <div class="splide splide--grid">
+        <div class="splide__text">
+          <Heading level="h2" decor>Choose a destination</Heading>
+          <p>Pick an area to explore, from the highlands of Lembang to the southern coast of Pangandaran.</p>
+        </div>
+
+        <div class="splide__track">
+          <div class="splide__list">
+            {items.map((d) => (
+              <div class="splide__slide">
+                <DestinationPickCard title={d.label} text={d.intro} image={d.image} href={destinationUrl(d.key)} count={d.count} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </Section>
+)}

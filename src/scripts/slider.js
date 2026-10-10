@@ -20,6 +20,28 @@ const sliders = {
       }
     }
   },
+    "pickSlider": {
+    "element": "pick-slider",
+    "options": {
+      type: "slide",
+      perPage: 7,
+      perMove: 1,
+      gap: "1.6rem",
+      arrows: false,
+      pagination: false,
+      breakpoints: {
+        1023: {
+          perPage: 5,
+          gap: "1.2rem"
+        },
+        767: {
+          perPage: 3,
+          gap: "0.8rem",
+          pagination: true
+        }
+      }
+    }
+  },
   "popularSlider": {
     "element": "popular-slider",
     "options": {
@@ -37,9 +59,13 @@ const sliders = {
           perPage: 2.2
         },
         1023: {
-          perPage: 1,
+          perPage: 2,
+          gap: "1.6rem",
           arrows: false,
           pagination: true
+        },
+        767: {
+          gap: "1.2rem"
         }
       }
     }
@@ -54,10 +80,20 @@ const sliders = {
       trimSpace: false,
       pagination: false,
       breakpoints: {
+        1440: {
+          perPage: 2.8
+        },
+        1152: {
+          perPage: 2.2
+        },
         1023: {
-          perPage: 1,
+          perPage: 2,
+          gap: "1.6rem",
           arrows: false,
           pagination: true
+        },
+        767: {
+          gap: "1.2rem"
         }
       }
     }

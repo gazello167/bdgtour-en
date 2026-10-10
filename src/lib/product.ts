@@ -115,6 +115,9 @@ export function parseProduct(value: unknown): Product | null {
 // ---------------------------------------------------------------------------
 // Pembantu tampilan
 // ---------------------------------------------------------------------------
+// Kurs untuk harga dalam dolar di kartu home
+export const USD_RATE = 18000;
+export const usd = (idr: number) => Math.round(idr / USD_RATE);
 export const rp = (n: number) => `Rp ${n.toLocaleString("en-US")}`;
 
 // Teks polos -> HTML aman; **x** menjadi <strong>x</strong>

@@ -6,6 +6,7 @@ import Heading from "@components/ui/Heading.astro";
 
 import data from "@data/special-offer.json"; // hanya untuk judul dan subjudul
 import { getAllPosts, postUrl } from "../../lib/posts";
+import { priceRange, usd } from "../../lib/product";
 
 // Artikel kategori Itineraries yang dicentang "Featured" di CMS PHP (butuh gambar utama), paket terpendek dulu.
 const posts = (await getAllPosts())
@@ -39,6 +40,7 @@ const short = (s: string | null, max = 150) => {
                   text={short(p.excerpt)}
                   image={p.image_url!}
                   href={postUrl(p)}
+                  price={p.product && priceRange(p.product) ? usd(priceRange(p.product)!.low.price) : undefined}
                   meta={p.days ? `${p.days} ${p.days === 1 ? "day" : "days"}` : "Itinerary"}
                 />
               </div>
