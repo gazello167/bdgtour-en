@@ -95,8 +95,11 @@ const n = images.length;
   .track::-webkit-scrollbar { display: none; }
   .track:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 0.5rem; }
 
-  .slide { flex: 0 0 86%; scroll-snap-align: start; min-width: 0; }
-  .slide a { display: block; border-radius: 0.9rem; overflow: hidden; background: #e8edf0; aspect-ratio: 4 / 3; }
+  .slide { flex: 0 0 30%; scroll-snap-align: start; min-width: 0; }
+  .slide a { display: block; border-radius: 0.9rem; overflow: hidden; background: #e8edf0; aspect-ratio: 5 / 4; }
+  @media (min-width: 700px) {
+    .slide a { aspect-ratio: 5 / 4; }
+  }
   .slide img { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; }
   @media (prefers-reduced-motion: no-preference) {
     .slide img { transition: transform 0.35s ease; }
