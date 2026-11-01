@@ -44,6 +44,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
     {description && <meta property="og:description" content={description} />}
     {image && <meta property="og:image" content={image} />}
     {canonical && <meta property="og:url" content={canonical} />}
+    <script is:inline src="/en/t.js" defer></script>
   </head>
   <body>
     <Header theme={headerTheme} />
