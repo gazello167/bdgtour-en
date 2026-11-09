@@ -119,7 +119,8 @@ export function parseProduct(value: unknown): Product | null {
 export const USD_RATE = 19000;
 //export const usd = (idr: number) => Math.round(idr / USD_RATE);
 // Mengembalikan format $100
-export const usd = (idr: number) => `$${Math.round(idr / USD_RATE).toLocaleString("en-US")}`;
+//export const usd = (idr: number) => `$${Math.round(idr / USD_RATE).toLocaleString("en-US")}`;
+export const usd = (n: number) => `$${n.toLocaleString("en-US")}`;
 export const rp = (n: number) => `Rp ${n.toLocaleString("en-US")}`;
 
 // Teks polos -> HTML aman; **x** menjadi <strong>x</strong>
