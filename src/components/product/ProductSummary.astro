@@ -1,5 +1,5 @@
 ---
-import { priceRange, rp, type Product } from "../../lib/product";
+import { priceRange, usd, type Product } from "../../lib/product";
 interface Props { product: Product; days?: number | null; }
 const { product, days } = Astro.props;
 const range = priceRange(product);
@@ -14,7 +14,7 @@ const links = [
   {range && (
     <p class="from">
       <span>From</span>
-      <strong>{rp(range.low.price)}</strong>
+      <strong>{usd(range.low.price)}</strong>
       <span>per person · {range.low.pax} travellers, {range.low.vehicle}</span>
     </p>
   )}

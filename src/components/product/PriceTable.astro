@@ -1,5 +1,5 @@
 ---
-import { rp, priceRange, type PriceTable } from "../../lib/product";
+import { usd, priceRange, type PriceTable } from "../../lib/product";
 interface Props { table: PriceTable; }
 const { table } = Astro.props;
 const hasPickup = table.rows.some((r) => r.pickup);
@@ -26,8 +26,8 @@ const pickupLabel = table.pickup_label || "Extra per person for pickup outside B
           <tr class:list={{ best: best === r }}>
             <th scope="row" data-l="Group size">{r.pax} {r.pax === "1" ? "traveller" : "travellers"}</th>
             <td data-l="Vehicle">{r.vehicle}</td>
-            <td data-l="Per person"><span class="pp"><strong>{rp(r.price)}</strong>{best === r && <em>Lowest price</em>}</span></td>
-            {hasPickup && <td data-l="Pickup extra">{r.pickup ? `+ ${rp(r.pickup)}` : "–"}</td>}
+            <td data-l="Per person"><span class="pp"><strong>{usd(r.price)}</strong>{best === r && <em>Lowest price</em>}</span></td>
+            {hasPickup && <td data-l="Pickup extra">{r.pickup ? `+ ${usd(r.pickup)}` : "–"}</td>}
           </tr>
         ))}
       </tbody>
