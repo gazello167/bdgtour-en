@@ -27,7 +27,7 @@ const pickupLabel = table.pickup_label || "Extra per person for pickup outside B
             <th scope="row" data-l="Group size">{r.pax} {r.pax === "1" ? "traveller" : "travellers"}</th>
             <td data-l="Vehicle">{r.vehicle}</td>
             <td data-l="Per person"><span class="pp"><strong>{usd(r.price)}</strong>{best === r && <em>Lowest price</em>}</span></td>
-            {hasPickup && <td data-l="Pickup extra">{r.pickup ? `+ ${usd(r.pickup)}` : "–"}</td>}
+            {hasPickup && <td data-l="Pickup extra">{r.pickup ? `+ {usd(r.pickup)}` : "–"}</td>}
           </tr>
         ))}
       </tbody>
